@@ -6,7 +6,6 @@ use App\Common\Database;
 use App\Common\Message;
 use App\Common\JWT;
 use App\Auth\AuthAPI;
-use App\Logs\LogsAPI;
 
 class MenuAPI
 {
@@ -15,7 +14,6 @@ class MenuAPI
     $this->message = new Message;
     $this->jwt = new JWT;
     $this->auth = new AuthAPI;
-    $this->logs = new LogsAPI;
   }
 
   public function allPage($filter) {
@@ -256,7 +254,6 @@ class MenuAPI
     );
 
     if ( $update ) {
-      $this->logs->InsertLogs($name,$pk,$value,$table);
       return $this->message->result(true, 'Update successful!');
     } else {
       return $this->message->result(false, 'Update failed!');

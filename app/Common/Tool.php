@@ -2,7 +2,7 @@
 
 namespace App\Common;
 
-use App\Common\Database;
+use App\Common\Tool;
 
 class Tool {
 
@@ -100,18 +100,24 @@ class Tool {
 			        "verify_peer_name"=>false,
 			    ),
 			);
-			$url = "https://localhost:8443/smartcard/data/";
+			$url_card = "https://localhost:8443/smartcard/data/";
+			$url_img = "https://localhost:8443/smartcard/picture/";
+		    $response = file_get_contents($url_card, false, stream_context_create($arrContextOptions));
+		    
+		    if (json_decode($response, true)) {
 
-			$file_headers = @get_headers($url);
-	      	if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
-	          	return json_encode([
-	          		"result" => false,
-	          		"message" => "url not found!."
-	          	]);
-	      	}else {
-	        	$response = file_get_contents($url, false, stream_context_create($arrContextOptions));
-				return json_decode($response);
-	      	}
+		    	$root = 'files/images/parent/';
+		    	self::initFolder($root, json_decode($response)->cid);
+		    	$img = json_decode($response)->cid.".jpg";
+			    file_put_contents($root."/".json_decode($response)->cid."/".$img, file_get_contents($url_img, false, stream_context_create($arrContextOptions))); 
+		    	return $response;
+
+		    }else{
+		    	return json_encode([
+		    		"result" => false,
+		    		"message" => "Can't read Card!."
+		    	]);
+		    }	
 			
 		} catch (\Exception $e) {
 			throw new \Exception('Error: read card failed.');

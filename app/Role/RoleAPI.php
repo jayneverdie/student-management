@@ -4,14 +4,12 @@ namespace App\Role;
 
 use App\Common\Database;
 use App\Common\Message;
-use App\Logs\LogsAPI;
 
 class RoleAPI
 {
 	public function __construct() {
     $this->db = Database::connect();
     $this->message = new Message;
-    $this->logs = new LogsAPI;
 	}
 
 	public function all($filter) {
@@ -66,7 +64,6 @@ class RoleAPI
     );
 
     if ( $update ) {
-      $this->logs->InsertLogs($name,$pk,$value,$table);
       return $this->message->result(true, 'Update successful!');
     } else {
       return $this->message->result(false, 'Update failed!');

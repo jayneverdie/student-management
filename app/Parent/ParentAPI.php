@@ -5,14 +5,12 @@ namespace App\Parent;
 use App\Common\Database;
 use App\Common\Message;
 use App\Common\JWT;
-use App\Logs\LogsAPI;
 
 class ParentAPI
 {
   public function __construct() {
 		$this->db = Database::connect();
 		$this->message = new Message;
-    $this->logs = new LogsAPI;
 	}
 
   public function all($filter) {
@@ -205,6 +203,19 @@ class ParentAPI
       return $this->message->result(true, 'Create successful!');
     } else {
       return $this->message->result(false, 'Create failed!');
+    }
+  }
+
+  public function loadFile($card_id,$filetype) {
+    try {
+      return Database::rows(
+        $this->db,
+        "SELECT *
+        FROM file_document
+        WHERE card_id = ? AND file_type = ?",[$card_id,$filetype]
+      );
+    } catch (\Exception $e) {
+      throw new Exception($e->getMessage());
     }
   }
 

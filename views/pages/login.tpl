@@ -30,10 +30,10 @@
 			</div>
 			<div class="row" style="margin-top: 20px;">
 				<div class="col-xs-12">
-					<a href="/forgot_password">
+					<!-- <a href="/forgot_password">
 						<i class="fa fa-exclamation" aria-hidden="true"></i> ลืมรหัสผ่าน
-					</a>
-					<a href="/files/manual/Manual-Form-EA-AUTOMAIL-V1.pdf" class="text-center pull-right">
+					</a> -->
+					<a href="#" class="text-center pull-right">
 						<i class="fa fa-book" aria-hidden="true"></i> คู่มือการใช้งาน
 					</a>
 					<!-- <a href="/register" class="text-center pull-right">

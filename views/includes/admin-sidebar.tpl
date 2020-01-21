@@ -27,5 +27,4 @@
 		</ul>
 	</li>
 	<li><a href="/category"><i class="fa fa-folder" aria-hidden="true"></i> <span>Category</span></a></li>
-	<li><a href="/media_upload"><i class="fa fa-upload" aria-hidden="true"></i> <span>Media</span></a></li>
 </ul>

@@ -1,15 +1,24 @@
 <?php $this->layout('layouts/dashboard', ['title' => 'Parent']);?>
+<style type="text/css">
+  td {
+    padding: 10px;
+  }  
+</style>
 
 <section class="content">
   <div class="box box-primary">
     <div class="box-header with-border">
-      <h3 class="box-title">ข้อมูลผู้ปกครอง</h3>
+      <h3 class="box-title">ข้อมูลผู้ปกครอง </h3>
+      <span style="font-size: 2em;">
+        <i class="fas fa-user-shield"></i>
+      </span>
     </div>
     <div class="box-body">
       <!-- button -->
       <div class="btn-control">
-        <button class="btn btn-primary" id="create"><i class="fa fa-plus" aria-hidden="true"></i> Create</button>
-        <button class="btn btn-danger" id="delete"><i class="fa fa-close" aria-hidden="true"></i> Delete</button>
+        <button class="btn btn-primary" id="create"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create</button>
+        <!-- <button class="btn btn-danger" id="delete"><i class="fa fa-close" aria-hidden="true"></i> Delete</button> -->
+        <button class="btn btn-success" id="line"><i class="fa fa-address-book"></i> Detail</button>
       </div>
       <!-- grid -->
       <table id="grid_parent" class="table table-condensed table-striped" style="width:100%">
@@ -132,13 +141,15 @@
                   <textarea rows="3" name="address_first" id="address_first" class="form-control" autocomplete="off" required></textarea>
                 </div>
                 <div class="form-group col-md-4">
-                  <label for="address_second">ที่อยู่ที่ติดต่อได้ </label> 
-                  <a>(<input type="checkbox" id="chk_address_second"> เหมือนที่อยู่ตามทะเบียนบ้าน)</a>
+                  <label for="address_second">ที่อยู่ที่ติดต่อได้ 
+                    <a>(<input type="checkbox" id="chk_address_second"> เหมือนที่อยู่ตามทะเบียนบ้าน)</a>
+                  </label> 
                   <textarea rows="3" name="address_second" id="address_second" class="form-control" autocomplete="off"></textarea>
                 </div>
                 <div class="form-group col-md-4">
-                  <label for="address_third">ที่อยู่ที่ทำงาน</label>
-                  <a>(<input type="checkbox" id="chk_address_third"> เหมือนที่อยู่ที่ติดต่อได้)</a>
+                  <label for="address_third">ที่อยู่ที่ทำงาน
+                    <a>(<input type="checkbox" id="chk_address_third"> เหมือนที่อยู่ที่ติดต่อได้)</a>
+                  </label>
                   <textarea rows="3" name="address_third" id="address_third" class="form-control" autocomplete="off"></textarea>
                 </div>
             </div>
@@ -151,9 +162,143 @@
                   <div class="well"><span id="myfile"></span></div>
                 </div>
             </div>
-
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <div class="modal-footer"></div>
+              </div>
+            </div>
           <button class="btn btn-primary" type="submit"><i class="fa fa-check" aria-hidden="true"></i> บันทึก</button>
 
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal line -->
+<div class="modal" id="modal_line" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <h3 class="modal-title"><p id="line_card_id"></p></h3>
+      </div>
+      <div class="modal-body">
+        <!-- Content -->
+        <form id="form_create_relation">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_line_detail" data-toggle="tab" aria-expanded="false">ข้อมูลส่วนตัว</a></li>
+              <li><a href="#tab_line_student" data-toggle="tab" aria-expanded="false">ความสัมพันธ์</a></li>
+            </ul> 
+            <div class="tab-content">
+              <!-- tab line detail-->
+              <div class="tab-pane active" id="tab_line_detail">
+                <table class="table table-striped">
+                  <!-- <tr>
+                    <td>
+                      <b>เลขบัตรประจำตัวประชาชน</b>
+                    </td>
+                    <td colspan="4">
+                      <div id="detail_card_id"></div>
+                    </td>
+                  </tr> -->
+                  <tr>
+                    <td colspan="6">
+                      <img src="/assets/images/avatar.png" id="detail_card_img" alt="" width="150">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6">
+                      <div id="detail_card_id"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 140px;">
+                      <b>เพศ</b>
+                    </td>
+                    <td>
+                      <div id="detail_sex"></div>
+                    </td>
+                    <td>
+                      <b>วันเกิด</b>
+                    </td>
+                    <td>
+                      <div id="detail_birthday"></div>
+                    </td>
+                    <td>
+                      <b>เบอร์โทรศัพท์</b>
+                    </td>
+                    <td>
+                      <div id="detail_phone"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>ระดับการศึกษา</b>
+                    </td>
+                    <td>
+                      <div id="detail_education"></div>
+                    </td>
+                    <td>
+                      <b>อาชีพ</b>
+                    </td>
+                    <td>
+                      <div id="detail_career"></div>
+                    </td>
+                    <td>
+                      <b>อีเมลล์</b>
+                    </td>
+                    <td>
+                      <div id="detail_email"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>ที่อยู่ตามทะเบียนบ้าน</b>
+                    </td>
+                    <td colspan="5">
+                      <div id="detail_address_first"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>ที่อยู่ที่ติดต่อได้</b>
+                    </td>
+                    <td colspan="5">
+                      <div id="detail_address_second"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>ที่อยู่ที่ทำงาน</b>
+                    </td>
+                    <td colspan="5">
+                      <div id="detail_address_third"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>เอกสารไฟล์</b>
+                    </td>
+                    <td colspan="5">
+                      <p id ="file_document"></p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!-- tab line student-->
+              <div class="tab-pane" id="tab_line_student">
+                <p>
+                  <div id="admin_capability"></div> 
+                </p>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </div>
+          
         </form>
       </div>
     </div>
@@ -170,16 +315,43 @@
         $('#select_card').attr('disabled', true);
         call_ajax('get', '/api/v1/parent/readcard', {
         }).done(function(data) {
-            if (data.result === true) {
-                var path_img = "/files/images/" 
-                document.getElementById("img_card").src = path_img+"1100500939800.jpg";
+            if (data.result === false) {
+                alert(data.message);
             } else {
-              // alert(data.message);
+                var path_img = "/files/images/parent/"+data.cid+"/"; 
+                document.getElementById("img_card").src = path_img+data.cid+".jpg";
+                // cardid
+                $('#card_id').val(data.cid);
+                // nameprefix
+                if (data.prename=="นาย") {
+                    $('#name_prefix').val(1);
+                }else if(data.prename=="นางสาว"){
+                    $('#name_prefix').val(2);
+                }else if(data.prename=="นาง"){
+                    $('#name_prefix').val(3);
+                }
+                // fname
+                $('#parent_name').val(data.fname);
+                // lname
+                $('#parent_lastname').val(data.lname);
+                // sex
+                if (data.gender==1) {
+                    $('#sex_id').val('Male');
+                }else{
+                    $('#sex_id').val('Female');
+                }
+                // birthday
+                var ymd = data.dob;
+                var y = ymd.substring(0, 4);
+                var m = ymd.substring(4, 6);
+                var d = ymd.substring(6, 8);
+                $('#birthday').val(d+"-"+m+"-"+(y-543));
+                // address
+                var str_address = data.address;
+                var address = str_address.replace(/#/g, " ");
+                $('#address_first').val(address);
             }
             console.log(data);
-            var path_img = "/files/images/" 
-            document.getElementById("img_card").src = path_img+"1100500939800.jpg";
-            $('#card_id').val('xxxxxxxxxxxxx');
             $('#select_card').html('<i class="fa fa-id-card"> Scan</i>');
             $('#select_card').attr('disabled', false);
         });
@@ -215,22 +387,17 @@
         // { data: 'education'},
         // { data: 'career'},
         { data: 'status_name'}
-      ],
-      columnDefs: [
-        {
-          render: function(data, type, row) {
-            return '<a href="javascript:void(0)" class="--prefix-name" data-pk="'+row.id+'">'+data+'</a>';
-          }, targets: 1
-        }
       ]
     });
 
     $('#create').on('click', function () {
         $('#modal_create').modal({backdrop: 'static'});
         $('#form_create').trigger('reset');
+        $('#select_card').html('<i class="fa fa-id-card"> Scan</i>');
+        $('#select_card').attr('disabled', false);
 
         $("#birthday").datepicker({
-            format: 'dd-mm-yyyy',
+            dateFormat: 'dd-mm-yy',
             autoclose: true,
             todayHighlight: true
         });
@@ -298,6 +465,45 @@
            $('#myfile').append("<button id='"+add+"' onclick='removeEle("+add+','+add1+','+br+")' type='button' class='btn btn-info'><i class='fa fa-trash'></i></button><input type='file' class='btn btn-info' name='files_upload[]' id='"+add1+"'><br id='"+br+"'>");
             num++;
         });
+    });
+
+    $('#line').on('click', function() {
+
+      var rowdata = rowSelected('#grid_parent');
+      var selected = '';
+      $('#file_document').html('');
+      if ( rowdata.length !== 0) {
+
+        $('#modal_line').modal({backdrop: 'static'}); 
+        $('#line_card_id').text(rowdata[0].name_prefix+rowdata[0].parent_name+" "+rowdata[0].parent_lastname);
+        // tab detail
+        $('#detail_card_id').html("<b>เลขบัตรประจำตัวประชาชน &nbsp;&nbsp;&nbsp;</b>"+rowdata[0].card_id);
+        $('#detail_birthday').text(rowdata[0].birthday);
+        $('#detail_sex').text(rowdata[0].sex_description);
+        $('#detail_phone').text(rowdata[0].phone);
+        $('#detail_education').text(rowdata[0].education);
+        $('#detail_career').text(rowdata[0].career);
+        $('#detail_email').text(rowdata[0].email);
+        $('#detail_address_first').text(rowdata[0].address_first);
+        $('#detail_address_second').text(rowdata[0].address_second);
+        $('#detail_address_third').text(rowdata[0].address_third);
+
+        var path_img = "/files/images/parent/"+rowdata[0].card_id+"/"; 
+        document.getElementById("detail_card_img").src =path_img+rowdata[0].card_id+".jpg";
+
+        call_ajax('get', '/api/v1/parent/loadfile?card_id=' + rowdata[0].card_id+"&filetype=parent&ran="+Math.random()*99999)
+        .done(function(data) {
+          var i = 1;
+          $.each(data, function( k, v ) {
+              var filename = v.file_name;
+              $('#file_document').append("<button type='button' class='btn btn-info btn-xs' onclick=deleteFile\('"+filename+"')><i class='far fa-trash-alt'></i></button> <a target='_blank' href='/files/document/parent/"+rowdata[0].card_id+"/" + v.file_name + "'>" + v.file_name + "</a><br>");
+              i++;
+          });
+        });
+
+      } else {
+        alert('Please select row!');
+      }
     });
 
   });

@@ -10,7 +10,6 @@ use App\Common\JWT;
 use App\Common\Message;
 use App\User\UserTable;
 use App\Common\Datatables;
-use App\Email\EmailAPI;
 use App\Secure\SecureAPI;
 use Webmozart\Assert\Assert;
 use App\Common\Validate;
@@ -26,7 +25,6 @@ class UserController
     $this->message = new Message;
     $this->user_table = new UserTable;
     $this->datatables = new Datatables;
-    $this->email = new EmailAPI;
     $this->secure = new SecureAPI;
     $this->validate = new Validate;
   }
@@ -243,16 +241,7 @@ class UserController
       $message .= 'คลิกที่ Link ด้านล่างเพื่อเปลี่ยนรหัสผ่านใหม่ <br/><br/>';
       $message .= '<a href=\'' . APP_URL . '/new_password/' . $filtered_email . '/' . $nonce . '\' >Reset Password</a>';
 
-      $sendEmail = $this->email->sendEmail(
-        'Auto Email System : Reset Password ['.$filtered_email.']',
-        $message,
-        [$filtered_email],
-        [],
-        [],
-        [],
-        '',
-        EMAIL_USER
-      );
+      $sendEmail = $message;
 
       if ( $sendEmail ) {
         $this->message->addFlashMessage('success', 'Send mail success.');

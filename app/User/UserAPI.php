@@ -5,7 +5,6 @@ namespace App\User;
 use App\Common\Database;
 use App\Common\Message;
 use App\Common\JWT;
-use App\Logs\LogsAPI;
 
 class UserAPI
 {
@@ -13,7 +12,6 @@ class UserAPI
     $this->db = Database::connect();
     $this->message = new Message;
     $this->jwt = new JWT;
-    $this->logs = new LogsAPI;
 	}
 
 	public function getUserInfo($username) {
@@ -198,8 +196,6 @@ class UserAPI
       if ( !$update ) {
         throw new \Exception('Error: update failed.');
       }
-
-      // $this->logs->InsertLogs($name, $pk, $value, $table);
 
       return 'Update success';
     } catch (\Exception $e) {

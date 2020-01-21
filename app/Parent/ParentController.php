@@ -64,7 +64,7 @@ class ParentController
   public function create($request, $response, $args) {
     try {
       $parsedBody = $request->getParsedBody();
-      $root = './files/document/';
+      $root = 'files/document/parent/';
       
       if (isset($_FILES["files_upload"]["name"])) {
         $this->tool->initFolder($root, $parsedBody['card_id']);
@@ -106,8 +106,15 @@ class ParentController
     try {
       $result = $this->tool->readCard();
       return $result;
-      // return $response->withJson($this->parent->readCard());
-      
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
+  public function loadFile($request, $response, $args) {
+    try {
+      $params = $request->getQueryParams();
+      return $response->withJson($this->parent->loadFile($params["card_id"],$params["filetype"]));
     } catch (\Exception $e) {
       return [];
     }

@@ -5,14 +5,12 @@ namespace App\Master;
 use App\Common\Database;
 use App\Common\Message;
 use App\Common\JWT;
-use App\Logs\LogsAPI;
 
 class MasterAPI
 {
   public function __construct() {
 		$this->db = Database::connect();
 		$this->message = new Message;
-    $this->logs = new LogsAPI;
 	}
 
   public function all($filter) {

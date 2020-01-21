@@ -11,9 +11,12 @@
 	<!-- Header Navbar -->
 	<nav class="navbar navbar-static-top" role="navigation">
 		<!-- Sidebar toggle button-->
-		<a href="javascript:void(0);" class="sidebar-toggle" data-toggle="push-menu" role="button">
+		<!-- <a href="javascript:void(0);" class="sidebar-toggle" data-toggle="push-menu" role="button">
 			<span class="sr-only">Toggle navigation</span>
-		</a> 
+		</a>  -->
+		<a href="javascript:void(0);" class="sidebar-toggle" data-toggle="push-menu" role="button">
+			<i class="fas fa-bars"></i>
+		</a>
 		<?php if ( $user_data["result"] === true ): ?>
 		<div class="navbar-custom-menu">
 			<ul class="nav navbar-nav">
@@ -40,9 +43,9 @@
 						</li>
 						<!-- Menu Footer-->
 						<li class="user-footer">
-							<a href="/user/profile" class="btn btn-default btn-block btn-flat"><i class="fa fa-address-card" aria-hidden="true"></i> Profile</a>
-							<a href="/user/change_password" class="btn btn-default btn-block btn-flat"><i class="fa fa-key" aria-hidden="true"></i> Change Password</a>
-							<a href="/logout" class="btn btn-default btn-block btn-flat"><i class="fa fa-sign-out" aria-hidden="true"></i> Sign out</a>
+							<a href="/user/profile" class="btn btn-default btn-block btn-flat"><i class="fa fa-address-card"></i> Profile</a>
+							<a href="/user/change_password" class="btn btn-default btn-block btn-flat"><i class="fa fa-key"></i> Change Password</a>
+							<a href="/logout" class="btn btn-default btn-block btn-flat"><i class="fas fa-sign-out-alt"></i> Sign out</a>
 						</li>
 					</ul>
 				</li>

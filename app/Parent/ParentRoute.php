@@ -10,4 +10,5 @@ $app->group('/api/v1/parent', function () use ($app, $auth, $accessApi) {
 	$app->post('/load/career', 'App\Parent\ParentController:getCareer')->add($auth);
 	$app->post('/create', 'App\Parent\ParentController:create')->add($auth);
 	$app->get('/readcard', 'App\Parent\ParentController:readCard')->add($auth);
+	$app->get('/loadfile', 'App\Parent\ParentController:loadFile')->add($auth);
 });
