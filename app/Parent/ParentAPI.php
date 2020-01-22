@@ -219,4 +219,32 @@ class ParentAPI
     }
   }
 
+  public function getMapRelation() {
+    try {
+      return Database::rows(
+        $this->db,
+        "SELECT M.*,N.name_prefix,S.student_name,S.student_lastname,C.classroom,R.relation_description
+        FROM MapParentStudent M
+        LEFT JOIN StudentTrans S ON M.student_id = S.id
+        LEFT JOIN NamePrefix N ON S.name_prefix_id = N.id
+        LEFT JOIN Relation R ON M.relation = R.id
+        LEFT JOIN ClassRoom C ON S.classroom_id = C.id"
+      );
+    } catch (\Exception $e) {
+      throw new Exception($e->getMessage());
+    }
+  }
+
+  public function getRelation() {
+    try {
+      return Database::rows(
+        $this->db,
+        "SELECT *
+        FROM Relation"
+      );
+    } catch (\Exception $e) {
+      throw new Exception($e->getMessage());
+    }
+  }
+
 }

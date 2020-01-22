@@ -120,5 +120,26 @@ class ParentController
     }
   }
 
+  public function getMapRelation($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+
+      $data = $this->parent->getMapRelation($this->datatables->filter($parsedBody));
+      $pack = $this->datatables->get($data, $parsedBody);
+
+      return $response->withJson($pack);
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
+  public function getRelation($request, $response, $args) {
+    try {
+      return $response->withJson($this->parent->getRelation());
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
 }
 

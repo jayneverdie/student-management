@@ -81,6 +81,7 @@
                             <button class="btn btn-info" id="select_card" type="button">
                             <i class="fa fa-id-card"></i> Scan
                             </button>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -197,14 +198,6 @@
               <!-- tab line detail-->
               <div class="tab-pane active" id="tab_line_detail">
                 <table class="table table-striped">
-                  <!-- <tr>
-                    <td>
-                      <b>เลขบัตรประจำตัวประชาชน</b>
-                    </td>
-                    <td colspan="4">
-                      <div id="detail_card_id"></div>
-                    </td>
-                  </tr> -->
                   <tr>
                     <td colspan="6">
                       <img src="/assets/images/avatar.png" id="detail_card_img" alt="" width="150">
@@ -291,15 +284,106 @@
               </div>
               <!-- tab line student-->
               <div class="tab-pane" id="tab_line_student">
-                <p>
-                  <div id="admin_capability"></div> 
-                </p>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <table id="grid_map" class="table table-condensed table-striped" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>ลำดับ</th>
+                      <th>ความสัมพันธ์</th>
+                      <th>คำนำหน้า</th>
+                      <th>ชื่อ</th>
+                      <th>นาสกุล</th>
+                      <th>ห้องเรียน</th>
+                      <th>หมายเหตุ</th>
+                    </tr>
+                  </thead>
+                </table>
+                <hr>
+
+                <div class="modal-header">
+                  <h3 class="modal-title"><u>เพิ่มความสัมพันธ์</u></h3>
+                </div>
+                <form id="form_create_map" onsubmit="return submit_create_map()"> 
+                  <div class="form-group col-md-12">
+                      <div class="row">
+                          <div class="form-group col-md-4">
+                            <label for="map_relation">ความสัมพันธ์</label>
+                            <select name="map_relation" id="map_relation" class="form-control" required>
+                              <option value="">--เลือก--</option>
+                            </select>
+                          </div>
+                          <div class="col-md-4">
+                              <label for="map_student">นักเรียน</label>
+                              <div class="input-group">
+                              <input type="text" class="form-control" name="map_student" id="map_student" required readonly>
+                                <span class="input-group-btn">
+                                <button class="btn btn-info" id="select_student" type="button">
+                                <i class="fa fa-search"></i> 
+                                </button>
+                                </span>
+                              </div>
+                          </div>
+                          <div class="col-md-4">
+                              <label for="map_student_id">รหัสประจำตัวนักเรียน</label>
+                              <div class="input-group">
+                              <input type="text" class="form-control" name="map_student_id" id="map_student_id" required readonly>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group col-md-12">
+                    <div class="row">
+                      <div class="form-group col-md-4">
+                        <label for="map_remark">หมายเหตุ</label>
+                        <textarea rows="3" name="map_remark" id="map_remark" class="form-control" autocomplete="off" required></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">บันทึก</button>
+                </form>
+                
               </div>
             </div>
           </div>
           
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal_select_student" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+
+        <h3 class="modal-title">Select Student</h3>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table id="grid_student" class="table table-condensed table-striped" style="width:100%">
+            <thead>
+              <tr>
+              <th>คำนำหน้า</th>
+              <th>ชื่อ</th>
+              <th>นาสกุล</th>
+              <th>ชื่อเล่น</th>
+              <th>รหัสประจำตัวนักเรียน</th>
+              <th>ห้องเรียน</th>
+            </tr>
+            <tr>
+              <th>name_prefix</th>
+              <th>student_name</th>
+              <th>student_lastname</th>
+              <th>nickname</th>
+              <th>student_id</th>
+              <th>classroom</th>
+            </tr>
+            </thead>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -499,6 +583,75 @@
               $('#file_document').append("<button type='button' class='btn btn-info btn-xs' onclick=deleteFile\('"+filename+"')><i class='far fa-trash-alt'></i></button> <a target='_blank' href='/files/document/parent/"+rowdata[0].card_id+"/" + v.file_name + "'>" + v.file_name + "</a><br>");
               i++;
           });
+        });
+
+        call_ajax("post", "/api/v1/parent/load/relation").done(function(data) {
+          $('#map_relation').html("<option value=''>- เลือก -</option>");
+          $.each(data, function(i, v) {
+            $("#map_relation").append(
+              "<option value='" + v.id + "'>" + v.relation_description + "</option>"
+            );
+          });
+        });
+
+        loadGrid({
+          el: '#grid_map',
+          processing: true,
+          serverSide: true,
+          deferRender: true,
+          searching: true,
+          order: [],
+          orderCellsTop: true,
+          modeSelect: "single",
+          lengthChange: false,
+          ajax: {
+            url: '/api/v1/parent/map',
+            method: 'post'
+          },
+          columns: [
+            { data: 'id'},
+            { data: 'relation_description'},
+            { data: 'name_prefix'},
+            { data: 'student_name'},
+            { data: 'student_lastname'},
+            { data: 'classroom'},
+            { data: 'remark'}
+          ]
+        });
+
+        $('#select_student').on('click', function () {
+          $('#modal_select_student').modal({backdrop: 'static'});
+
+          loadGrid({
+            el: '#grid_student',
+            processing: true,
+            serverSide: true,
+            deferRender: true,
+            searching: true,
+            order: [],
+            orderCellsTop: true,
+            modeSelect: "single",
+            ajax: {
+              url: '/api/v1/student/all',
+              method: 'post'
+            },
+            columns: [
+              { data: 'name_prefix'},
+              { data: 'student_name'},
+              { data: 'student_lastname'},
+              { data: 'student_nickname'},
+              { data: 'student_id'},
+              { data: 'classroom'}
+            ]
+          });
+
+          $('#grid_student').on('dblclick', function () {
+            var rowdata = rowSelected('#grid_student');
+            $('input[name=map_student_id]').val(rowdata[0].student_id);
+            $('input[name=map_student]').val(rowdata[0].name_prefix+" "+rowdata[0].student_name+" "+rowdata[0].student_lastname);
+            $('#modal_select_student').modal('hide');
+          });
+
         });
 
       } else {

@@ -11,4 +11,6 @@ $app->group('/api/v1/parent', function () use ($app, $auth, $accessApi) {
 	$app->post('/create', 'App\Parent\ParentController:create')->add($auth);
 	$app->get('/readcard', 'App\Parent\ParentController:readCard')->add($auth);
 	$app->get('/loadfile', 'App\Parent\ParentController:loadFile')->add($auth);
+	$app->post('/map', 'App\Parent\ParentController:getMapRelation')->add($auth);
+	$app->post('/load/relation', 'App\Parent\ParentController:getRelation')->add($auth);
 });
