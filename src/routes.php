@@ -14,3 +14,4 @@ require_once '../app/Employee/EmployeeRoute.php';
 require_once '../app/Parent/ParentRoute.php';
 require_once '../app/Student/StudentRoute.php';
 require_once '../app/Teacher/TeacherRoute.php';
+require_once '../app/Receive/ReceiveRoute.php';

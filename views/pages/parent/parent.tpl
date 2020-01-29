@@ -302,19 +302,19 @@
                 <div class="modal-header">
                   <h3 class="modal-title"><u>เพิ่มความสัมพันธ์</u></h3>
                 </div>
-                <form id="form_create_map" onsubmit="return submit_create_map()"> 
+                <form id="form_create_map"> 
                   <div class="form-group col-md-12">
                       <div class="row">
                           <div class="form-group col-md-4">
                             <label for="map_relation">ความสัมพันธ์</label>
-                            <select name="map_relation" id="map_relation" class="form-control" required>
+                            <select name="map_relation" id="map_relation" class="form-control">
                               <option value="">--เลือก--</option>
                             </select>
                           </div>
                           <div class="col-md-4">
                               <label for="map_student">นักเรียน</label>
                               <div class="input-group">
-                              <input type="text" class="form-control" name="map_student" id="map_student" required readonly>
+                              <input type="text" class="form-control" name="map_student" id="map_student"  readonly>
                                 <span class="input-group-btn">
                                 <button class="btn btn-info" id="select_student" type="button">
                                 <i class="fa fa-search"></i> 
@@ -323,9 +323,11 @@
                               </div>
                           </div>
                           <div class="col-md-4">
-                              <label for="map_student_id">รหัสประจำตัวนักเรียน</label>
+                              <label for="map_student_card_id">รหัสประจำตัวนักเรียน</label>
                               <div class="input-group">
-                              <input type="text" class="form-control" name="map_student_id" id="map_student_id" required readonly>
+                              <input type="text" class="form-control" name="map_student_card_id" id="map_student_card_id"  readonly>
+                              <input type="hidden" name="map_parent_id" id="map_parent_id">
+                              <input type="hidden" name="map_student_id" id="map_student_id">
                               </div>
                           </div>
                       </div>
@@ -334,11 +336,11 @@
                     <div class="row">
                       <div class="form-group col-md-4">
                         <label for="map_remark">หมายเหตุ</label>
-                        <textarea rows="3" name="map_remark" id="map_remark" class="form-control" autocomplete="off" required></textarea>
+                        <textarea rows="3" name="map_remark" id="map_remark" class="form-control" autocomplete="off" ></textarea>
                       </div>
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-primary">บันทึก</button>
+                  <button type="button" id="submit_map" class="btn btn-primary">เพิ่ม</button>
                 </form>
                 
               </div>
@@ -449,6 +451,7 @@
       searching: true,
       order: [],
       orderCellsTop: true,
+      destroy: true,
       modeSelect: "single",
       ajax: {
         url: '/api/v1/parent/all',
@@ -571,6 +574,7 @@
         $('#detail_address_first').text(rowdata[0].address_first);
         $('#detail_address_second').text(rowdata[0].address_second);
         $('#detail_address_third').text(rowdata[0].address_third);
+        $('#map_parent_id').val(rowdata[0].id);
 
         var path_img = "/files/images/parent/"+rowdata[0].card_id+"/"; 
         document.getElementById("detail_card_img").src =path_img+rowdata[0].card_id+".jpg";
@@ -604,6 +608,7 @@
           orderCellsTop: true,
           modeSelect: "single",
           lengthChange: false,
+          destroy: true,
           ajax: {
             url: '/api/v1/parent/map',
             method: 'post'
@@ -631,6 +636,7 @@
             order: [],
             orderCellsTop: true,
             modeSelect: "single",
+            destroy: true,
             ajax: {
               url: '/api/v1/student/all',
               method: 'post'
@@ -647,8 +653,9 @@
 
           $('#grid_student').on('dblclick', function () {
             var rowdata = rowSelected('#grid_student');
-            $('input[name=map_student_id]').val(rowdata[0].student_id);
+            $('input[name=map_student_id]').val(rowdata[0].id);
             $('input[name=map_student]').val(rowdata[0].name_prefix+" "+rowdata[0].student_name+" "+rowdata[0].student_lastname);
+            $('input[name=map_student_card_id').val(rowdata[0].student_id);
             $('#modal_select_student').modal('hide');
           });
 
@@ -658,7 +665,32 @@
         alert('Please select row!');
       }
     });
-
+  
+    $('#submit_map').on('click', function() {
+      $.ajax({
+          url: '/api/v1/parent/create/map',
+          type : 'post',
+          cache : false,
+          dataType : 'json',
+          data : {
+            map_relation : $('#map_relation').val(),
+            map_student_id : $('#map_student_id').val(),
+            map_parent_id : $('#map_parent_id').val(),
+            map_remark : $('#map_remark').val()
+          }
+      })
+      .done(function(data) {
+        if ( data.result === true ) {
+          reloadGrid('#grid_map');
+          $('input[name=map_relation]').val('');
+          $('input[name=map_student]').val('');
+          $('input[name=map_student_card_id').val('');
+          $('input[name=map_remark]').val('');
+        } else {
+          alert(data.message);
+        }
+      });
+    });
   });
     
 
@@ -689,7 +721,7 @@
             } else {
               alert(data.message);
             }
-            console.log(data.message);
+
         });
             
         return false;

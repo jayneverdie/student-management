@@ -118,5 +118,55 @@ class TeacherController
     }
   }
 
+  public function getMapClassroom($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+
+      $data = $this->teacher->getMapClassroom($this->datatables->filter($parsedBody));
+      $pack = $this->datatables->get($data, $parsedBody);
+
+      return $response->withJson($pack);
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
+  public function getMapStudent($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+
+      $data = $this->teacher->getMapStudent($this->datatables->filter($parsedBody));
+      $pack = $this->datatables->get($data, $parsedBody);
+
+      return $response->withJson($pack);
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
+  public function createMap($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+      
+      $result = $this->teacher->createMap(
+        $parsedBody["map_classroom"],
+        $parsedBody["map_academicyear"],
+        $parsedBody["map_teacher_id"]
+      );
+
+      return $response->withJson($result);
+    } catch (Exception $e) {
+      return [];
+    }
+  }
+
+  public function getAcademicyear($request, $response, $args) {
+    try {
+      return $response->withJson($this->teacher->getAcademicyear());
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
 }
 

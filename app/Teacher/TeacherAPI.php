@@ -205,4 +205,94 @@ class TeacherAPI
     }
   }
 
+  public function getMapClassroom() {
+    try {
+      return Database::rows(
+        $this->db,
+        "SELECT M.*,C.classroom,A.academic_year,A.academic_term
+        FROM MapTeacher M
+        LEFT JOIN ClassRoom C ON M.classroom_id = C.id
+        LEFT JOIN AcademicYear A ON M.academicyear_id = A.id"
+      );
+    } catch (\Exception $e) {
+      throw new Exception($e->getMessage());
+    }
+  }
+
+  public function getMapStudent() {
+    try {
+      return Database::rows(
+        $this->db,
+        "SELECT S.id,S.student_id,S.name_prefix_id,N.name_prefix,S.student_name,S.student_lastname,S.student_nickname,C.classroom
+        FROM MapTeacher M
+        LEFT JOIN StudentTrans S ON S.classroom_id = M.classroom_id 
+        LEFT JOIN NamePrefix N ON N.id = S.name_prefix_id
+        LEFT JOIN ClassRoom C ON C.id = S.classroom_id"
+      );
+    } catch (\Exception $e) {
+      throw new Exception($e->getMessage());
+    }
+  }
+
+  public function getAcademicyear() {
+    try {
+      return Database::rows(
+        $this->db,
+        "SELECT *
+        FROM AcademicYear"
+      );
+    } catch (\Exception $e) {
+      throw new Exception($e->getMessage());
+    }
+  }
+
+  public function createMap(
+    $map_classroom,
+    $map_academicyear,
+    $map_teacher_id
+  ) {
+
+    $isExists = Database::hasRows(
+      $this->db,
+      "SELECT *
+      FROM MapTeacher
+      WHERE teacher_id = ? AND classroom_id = ? AND  academic_term = ?",
+      [
+        $map_teacher_id,$map_classroom,$map_academicyear
+      ]
+    );
+
+    if ( $isExists === true ) {
+      return $this->message->result(false, 'This id already exists!');
+    }
+
+    $auth = new JWT;
+    $user_data = $auth->verifyToken(); 
+    $username = $user_data['data']['user_data']->username;
+
+    $create = Database::query(
+      $this->db,
+      "INSERT INTO MapTeacher(
+        teacher_id
+        ,classroom_id
+        ,academicyear_id
+        ,create_date
+        ,create_by
+      )
+      VALUES(?, ?, ?, getdate(), ?)",
+      [
+        $map_teacher_id,
+        $map_classroom,
+        $map_academicyear,
+        $username
+      ]
+    );
+
+    if ( $create ) {
+      return $this->message->result(true, 'Create successful!');
+    } else {
+      return $this->message->result(false, 'Create failed!');
+    }
+  }
+
 }

@@ -10,4 +10,8 @@ $app->group('/api/v1/teacher', function () use ($app, $auth, $accessApi) {
 	$app->post('/load/career', 'App\Teacher\TeacherController:getCareer')->add($auth);
 	$app->post('/create', 'App\Teacher\TeacherController:create')->add($auth);
 	$app->get('/readcard', 'App\Teacher\TeacherController:readCard')->add($auth);
+	$app->post('/map', 'App\Teacher\TeacherController:getMapClassroom')->add($auth);
+	$app->post('/student', 'App\Teacher\TeacherController:getMapStudent')->add($auth);
+	$app->post('/create/map', 'App\Teacher\TeacherController:createMap')->add($auth);
+	$app->post('/load/academicyear', 'App\Teacher\TeacherController:getAcademicyear')->add($auth);
 });

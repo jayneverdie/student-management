@@ -13,4 +13,5 @@ $app->group('/api/v1/parent', function () use ($app, $auth, $accessApi) {
 	$app->get('/loadfile', 'App\Parent\ParentController:loadFile')->add($auth);
 	$app->post('/map', 'App\Parent\ParentController:getMapRelation')->add($auth);
 	$app->post('/load/relation', 'App\Parent\ParentController:getRelation')->add($auth);
+	$app->post('/create/map', 'App\Parent\ParentController:createMap')->add($auth);
 });

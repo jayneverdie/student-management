@@ -141,5 +141,22 @@ class ParentController
     }
   }
 
+  public function createMap($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+      
+      $result = $this->parent->createMap(
+        $parsedBody["map_relation"],
+        $parsedBody["map_student_id"],
+        $parsedBody["map_parent_id"],
+        $parsedBody["map_remark"]
+      );
+
+      return $response->withJson($result);
+    } catch (Exception $e) {
+      return [];
+    }
+  } 
+
 }
 

@@ -179,6 +179,189 @@
   </div>
 </div>
 
+<!-- modal line -->
+<div class="modal" id="modal_line" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <h3 class="modal-title"><p id="line_card_id"></p></h3>
+      </div>
+      <div class="modal-body">
+        <!-- Content -->
+        <form id="form_create_relation">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_line_detail" data-toggle="tab" aria-expanded="false">ข้อมูลส่วนตัว</a></li>
+              <li><a href="#tab_line_classroom" data-toggle="tab" aria-expanded="false">ข้อมูลห้องเรียน</a></li>
+            </ul> 
+            <div class="tab-content">
+              <!-- tab line detail-->
+              <div class="tab-pane active" id="tab_line_detail">
+                <table class="table table-striped">
+                  <tr>
+                    <td colspan="6">
+                      <img src="/assets/images/avatar.png" id="detail_card_img" alt="" width="150">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6">
+                      <div id="detail_card_id"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 140px;">
+                      <b>เพศ</b>
+                    </td>
+                    <td>
+                      <div id="detail_sex"></div>
+                    </td>
+                    <td>
+                      <b>วันเกิด</b>
+                    </td>
+                    <td>
+                      <div id="detail_birthday"></div>
+                    </td>
+                    <td>
+                      <b>เบอร์โทรศัพท์</b>
+                    </td>
+                    <td>
+                      <div id="detail_phone"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>ระดับการศึกษา</b>
+                    </td>
+                    <td>
+                      <div id="detail_education"></div>
+                    </td>
+                    <td>
+                      <b>อาชีพ</b>
+                    </td>
+                    <td>
+                      <div id="detail_career"></div>
+                    </td>
+                    <td>
+                      <b>อีเมลล์</b>
+                    </td>
+                    <td>
+                      <div id="detail_email"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>ที่อยู่ตามทะเบียนบ้าน</b>
+                    </td>
+                    <td colspan="5">
+                      <div id="detail_address_first"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>ที่อยู่ที่ติดต่อได้</b>
+                    </td>
+                    <td colspan="5">
+                      <div id="detail_address_second"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>ที่อยู่ที่ทำงาน</b>
+                    </td>
+                    <td colspan="5">
+                      <div id="detail_address_third"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>เอกสารไฟล์</b>
+                    </td>
+                    <td colspan="5">
+                      <p id ="file_document"></p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!-- tab line classroom-->
+              <div class="tab-pane" id="tab_line_classroom">
+                <table id="grid_map_classroom" class="table table-condensed table-striped" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>ลำดับ</th>
+                      <th>ห้องเรียน</th>
+                      <th>ปีการศึกษา</th>
+                      <th>ภาคเรียน</th>
+                      <th>รายชื่อนักเรียน</th>
+                    </tr>
+                  </thead>
+                </table>    
+                <hr>
+
+                <div class="modal-header">
+                  <h3 class="modal-title"><u>เพิ่มห้องเรียน</u></h3>
+                </div>
+                <form id="form_create_map"> 
+                  <div class="form-group col-md-12">
+                      <div class="row">
+                          <div class="form-group col-md-4">
+                            <label for="map_classroom">ห้องเรียน</label>
+                            <select name="map_classroom" id="map_classroom" class="form-control">
+                              <option value="">--เลือก--</option>
+                            </select>
+                          </div>
+                          <div class="form-group col-md-4">
+                            <label for="map_academicyear">ปีการศึกษา</label>
+                            <select name="map_academicyear" id="map_academicyear" class="form-control">
+                              <option value="">--เลือก--</option>
+                            </select>
+                          </div>
+                          <input type="hidden" name="map_teacher_id" id="map_teacher_id" class="form-control" autocomplete="off">
+                      </div>
+                  </div>
+                  <button type="button" id="submit_map" class="btn btn-primary">เพิ่ม</button>
+                </form>
+              </div>
+              
+            </div>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal student -->
+<div class="modal" id="modal_student" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <h3 class="modal-title"><p id="line_student_classroom"></p></h3>
+      </div>
+      <div class="modal-body">
+        <!-- Content -->
+        <table id="grid_student" class="table table-condensed table-striped" style="width:100%">
+          <thead>
+            <tr>
+              <th>ลำดับ</th>
+              <th>คำนำหน้าชื่อ</th>
+              <th>ชื่อ</th>
+              <th>นามสกุล</th>
+              <th>ชื่อเล่น</th>
+            </tr>
+          </thead>
+        </table>    
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php $this->push('scripts') ?>
 <script>
   jQuery(document).ready(function ($) {
@@ -289,6 +472,158 @@
            $('#myfile').append("<button id='"+add+"' onclick='removeEle("+add+','+add1+','+br+")' type='button' class='btn btn-info'><i class='fa fa-trash'></i></button><input type='file' class='btn btn-info btn-sm' name='files_upload[]' id='"+add1+"'><br id='"+br+"'>");
             num++;
         });
+    });
+
+    $('#line').on('click', function() {
+
+      var rowdata = rowSelected('#grid_teacher');
+      var selected = '';
+      $('#file_document').html('');
+      if ( rowdata.length !== 0) {
+
+        $('#modal_line').modal({backdrop: 'static'}); 
+        $('#line_card_id').text(rowdata[0].name_prefix+rowdata[0].teacher_name+" "+rowdata[0].teacher_lastname);
+        // tab detail
+        $('#detail_card_id').html("<b>เลขบัตรประจำตัวประชาชน &nbsp;&nbsp;&nbsp;</b>"+rowdata[0].card_id);
+        $('#detail_birthday').text(rowdata[0].birthday);
+        $('#detail_sex').text(rowdata[0].sex_description);
+        $('#detail_phone').text(rowdata[0].phone);
+        $('#detail_education').text(rowdata[0].education);
+        $('#detail_career').text(rowdata[0].career);
+        $('#detail_email').text(rowdata[0].email);
+        $('#detail_address_first').text(rowdata[0].address_first);
+        $('#detail_address_second').text(rowdata[0].address_second);
+        $('#detail_address_third').text(rowdata[0].address_third);
+        $('#map_teacher_id').val(rowdata[0].id);
+
+        var path_img = "/files/images/teacher/"+rowdata[0].card_id+"/"; 
+        document.getElementById("detail_card_img").src =path_img+rowdata[0].card_id+".jpg";
+
+        call_ajax('get', '/api/v1/parent/loadfile?card_id=' + rowdata[0].card_id+"&filetype=teacher&ran="+Math.random()*99999)
+        .done(function(data) {
+          var i = 1;
+          $.each(data, function( k, v ) {
+              var filename = v.file_name;
+              $('#file_document').append("<button type='button' class='btn btn-info btn-xs' onclick=deleteFile\('"+filename+"')><i class='far fa-trash-alt'></i></button> <a target='_blank' href='/files/document/teacher/"+rowdata[0].card_id+"/" + v.file_name + "'>" + v.file_name + "</a><br>");
+              i++;
+          });
+        });
+
+        call_ajax("post", "/api/v1/student/load/classroom").done(function(data) {
+          $('#map_classroom').html("<option value=''>- เลือก -</option>");
+          $.each(data, function(i, v) {
+            $("#map_classroom").append(
+              "<option value='" + v.id + "'>" + v.classroom + "</option>"
+            );
+          });
+        });
+
+        call_ajax("post", "/api/v1/teacher/load/academicyear").done(function(data) {
+          $('#map_academicyear').html("<option value=''>- เลือก -</option>");
+          $.each(data, function(i, v) {
+            $("#map_academicyear").append(
+              "<option value='" + v.id + "'>" + v.academic_year +" (เทอม"+v.academic_term+")"+ "</option>"
+            );
+          });
+        });
+
+        var grid_classroom_callback = function() {
+          $('#grid_map_classroom .--classroom').on('click', function(){
+
+            // $(".--classroom").each(function(){
+              
+              var val = $(this).data('pk');
+              $('#line_student_classroom').text(val);
+              $('#modal_student').modal({backdrop: 'static'}); 
+              
+              loadGrid({
+                el: '#grid_student',
+                processing: true,
+                serverSide: true,
+                deferRender: true,
+                searching: true,
+                order: [],
+                orderCellsTop: true,
+                modeSelect: "single",
+                lengthChange: false,
+                destroy: true,
+                ajax: {
+                  url: '/api/v1/teacher/student',
+                  method: 'post'
+                },
+                fnDrawCallback: grid_classroom_callback,
+                columns: [
+                  { data: 'id'},
+                  { data: 'name_prefix'},
+                  { data: 'student_name'},
+                  { data: 'student_lastname'},
+                  { data: 'student_nickname'}
+                ]
+              });
+
+            // });
+            
+          });
+        };
+
+        loadGrid({
+          el: '#grid_map_classroom',
+          processing: true,
+          serverSide: true,
+          deferRender: true,
+          searching: true,
+          order: [],
+          orderCellsTop: true,
+          modeSelect: "single",
+          lengthChange: false,
+          destroy: true,
+          ajax: {
+            url: '/api/v1/teacher/map',
+            method: 'post'
+          },
+          fnDrawCallback: grid_classroom_callback,
+          columns: [
+            { data: 'id'},
+            { data: 'classroom'},
+            { data: 'academic_year'},
+            { data: 'academic_term'}
+          ],
+          columnDefs: [
+            {
+              render: function(data, type, row) {
+                return '<a href="javascript:void(0)" class="--classroom" data-pk="'+row.classroom+'">'+'<i class="fa fa-search"></i>'+'</a>';
+              }, targets: 4
+            },
+          ]
+        });
+
+      } else {
+        alert('Please select row!');
+      }
+    });
+    
+    $('#submit_map').on('click', function() {
+      $.ajax({
+          url: '/api/v1/teacher/create/map',
+          type : 'post',
+          cache : false,
+          dataType : 'json',
+          data : {
+            map_classroom : $('#map_classroom').val(),
+            map_academicyear : $('#map_academicyear').val(),
+            map_teacher_id : $('#map_teacher_id').val()
+          }
+      })
+      .done(function(data) {
+        if ( data.result === true ) {
+          reloadGrid('#grid_map_classroom');
+          $('input[name=map_classroom]').val('');
+          $('input[name=map_academicyear]').val('');
+          $('input[name=map_teacher_id]').val('');
+        } else {
+          alert(data.message);
+        }
+      });
     });
 
   });

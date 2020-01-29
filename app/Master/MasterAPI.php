@@ -136,4 +136,98 @@ class MasterAPI
     }
   }
 
+  public function careerAll($filter) {
+    return Database::rows(
+      $this->db,
+      "SELECT 
+        N.id
+        ,N.career
+        ,N.create_date
+        ,N.create_by
+        ,N.update_date
+        ,N.update_by
+      FROM Career N
+      WHERE $filter"
+    );
+  }
+
+  public function careerCreate($name) {
+
+    $isExists = Database::hasRows(
+      $this->db,
+      "SELECT career 
+      FROM Career
+      WHERE career = ?",
+      [
+        trim($name)
+      ]
+    );
+
+    if ( $isExists === true ) {
+      return $this->message->result(false, 'This name already exists!');
+    }
+
+    $auth = new JWT;
+    $user_data = $auth->verifyToken(); 
+    $username = $user_data['data']['user_data']->username;
+
+    $create = Database::query(
+      $this->db,
+      "INSERT INTO Career(career, create_by, create_date)
+      VALUES(?, ?, getdate())",
+      [
+        $name,
+        $username
+      ]
+    );
+
+    if ( $create ) {
+      return $this->message->result(true, 'Create successful!');
+    } else {
+      return $this->message->result(false, 'Create failed!');
+    }
+  }
+
+  public function careerDelete($id) {
+
+    $isUsingParent = Database::hasRows(
+      $this->db,
+      "SELECT career_id 
+      FROM ParentTrans
+      WHERE career_id = ?",
+      [
+        $id
+      ]
+    );
+
+    $isUsingTeacher = Database::hasRows(
+      $this->db,
+      "SELECT career_id 
+      FROM TeacherTrans
+      WHERE career_id = ?",
+      [
+        $id
+      ]
+    );
+
+    if ( $isUsingParent === true || $isUsingTeacher === true ) {
+      return $this->message->result(false, 'This namefix is using!');
+    }
+
+    $delete = Database::query(
+      $this->db,
+      "DELETE FROM Career
+      WHERE id = ?",
+      [
+        $id
+      ]
+    );
+
+    if ( $delete ) {
+      return $this->message->result(true, 'Delete successful!');
+    } else {
+      return $this->message->result(false, 'Delete failed!');
+    }
+  }
+
 }

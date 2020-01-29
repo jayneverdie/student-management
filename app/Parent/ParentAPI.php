@@ -247,4 +247,56 @@ class ParentAPI
     }
   }
 
+  public function createMap(
+    $map_relation,
+    $map_student_id,
+    $map_parent_id,
+    $map_remark
+  ) {
+
+    $isExists = Database::hasRows(
+      $this->db,
+      "SELECT *
+      FROM MapParentStudent
+      WHERE parent_id = ? AND student_id = ? AND relation = ?",
+      [
+        $map_parent_id,$map_student_id,$map_relation
+      ]
+    );
+
+    if ( $isExists === true ) {
+      return $this->message->result(false, 'This id already exists!');
+    }
+
+    $auth = new JWT;
+    $user_data = $auth->verifyToken(); 
+    $username = $user_data['data']['user_data']->username;
+
+    $create = Database::query(
+      $this->db,
+      "INSERT INTO MapParentStudent(
+        parent_id
+        ,student_id
+        ,relation
+        ,remark
+        ,create_date
+        ,create_by
+      )
+      VALUES(?, ?, ?, ?, getdate(), ?)",
+      [
+        $map_parent_id,
+        $map_student_id,
+        $map_relation,
+        $map_remark,
+        $username
+      ]
+    );
+
+    if ( $create ) {
+      return $this->message->result(true, 'Create successful!');
+    } else {
+      return $this->message->result(false, 'Create failed!');
+    }
+  }
+
 }
