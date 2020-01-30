@@ -32,11 +32,11 @@ class ReceiveController
     return $response->withJson($pack);
   }
 
-  public function getParent($request, $response, $args) {
+  public function getStudentByParent($request, $response, $args) {
     try {
       $params = $request->getQueryParams();
 
-      return $response->withJson($this->receive->getParent($params["student_id"]));
+      return $response->withJson($this->receive->getStudentByParent($params["card_id"]));
     } catch (\Exception $e) {
       return [];
     }
@@ -75,5 +75,13 @@ class ReceiveController
     }
   }
 
+  public function Read($request, $response, $args) {
+    try {
+      $params = $request->getQueryParams();
+      return $response->withJson($this->receive->Read($params["card_id"]));
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
 }
 

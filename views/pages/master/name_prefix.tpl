@@ -19,12 +19,16 @@
             <th>คำนำหน้า</th>
             <th>ผู้สร้าง</th>
             <th>วัน/เวลาสร้าง</th>
+            <th>ผู้แก้ไข</th>
+            <th>วัน/เวลาแก้ไข</th>
           </tr>
           <tr>
             <th>id</th>
             <th>name_prefix</th>
             <th>create_by</th>
             <th>create_date</th>
+            <th>update_by</th>
+            <th>update_date</th>
           </tr>
         </thead>
       </table>
@@ -72,6 +76,7 @@
             alert(response.message);
             window.location.reload();
           }
+          reloadGrid('#grid_nameprefix', grid_nameprefix_callback);
         }
       });
     };
@@ -94,7 +99,9 @@
         { data: "id"},
         { data: "name_prefix"},
         { data: 'create_by'},
-        { data: "create_date"}
+        { data: "create_date"},
+        { data: 'update_by'},
+        { data: "update_date"}
       ],
       columnDefs: [
         {

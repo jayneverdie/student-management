@@ -1,9 +1,9 @@
-<?php $this->layout('layouts/dashboard', ['title' => 'Master-Career']);?>
+<?php $this->layout('layouts/dashboard', ['title' => 'Master-Relation']);?>
 
 <section class="content">
   <div class="box box-primary">
     <div class="box-header with-border">
-      <h3 class="box-title">อาชีพ</h3>
+      <h3 class="box-title">สถานะความสัมพันธ์</h3>
     </div>
     <div class="box-body">
       <!-- button -->
@@ -12,11 +12,11 @@
         <button class="btn btn-danger" id="delete"><i class="fa fa-close" aria-hidden="true"></i> Delete</button>
       </div>
       <!-- grid -->
-      <table id="grid_career" class="table table-condensed table-striped" style="width:100%">
+      <table id="grid_relation" class="table table-condensed table-striped" style="width:100%">
         <thead>
           <tr>
             <th>Id</th>
-            <th>อาชีพ</th>
+            <th>สถานะความสัมพันธ์</th>
             <th>ผู้สร้าง</th>
             <th>วัน/เวลาสร้าง</th>
             <th>ผู้แก้ไข</th>
@@ -24,7 +24,7 @@
           </tr>
           <tr>
             <th>id</th>
-            <th>career</th>
+            <th>relation_description</th>
             <th>create_by</th>
             <th>create_date</th>
             <th>update_by</th>
@@ -50,8 +50,8 @@
         <!-- Content -->
         <form id="form_create">
           <div class="form-group">
-            <label for="name_career">อาชีพ</label>
-            <input type="text" name="name_career" id="name_career" class="form-control" autocomplete="off" autofocus required>
+            <label for="name_relation">สถานะความสัมพันธ์</label>
+            <input type="text" name="name_relation" id="name_relation" class="form-control" autocomplete="off" autofocus required>
           </div>
           <button class="btn btn-primary" type="submit"><i class="fa fa-check" aria-hidden="true"></i> บันทึก</button>
         </form>
@@ -64,25 +64,25 @@
 <script>
   jQuery(document).ready(function ($) {
 
-    var grid_career_callback = function() {
+    var grid_relation_callback = function() {
       // cap name
-      $('#grid_career .--career-name').editable({
+      $('#grid_relation .--relation-name').editable({
         type: 'text',
         name: 'name',
-        url: '/api/v1/master/career/update',
+        url: '/api/v1/master/relation/update',
         title: 'Name',
         success: function(response, newValue) {
           if (response.result === false) {
             alert(response.message);
             window.location.reload();
           }
-          reloadGrid('#grid_career', grid_career_callback);
+          reloadGrid('#grid_relation', grid_relation_callback);
         }
       });
     };
 
     loadGrid({
-      el: '#grid_career',
+      el: '#grid_relation',
       processing: true,
       serverSide: true,
       deferRender: true,
@@ -91,13 +91,13 @@
       orderCellsTop: true,
       modeSelect: "single",
       ajax: {
-        url: '/api/v1/master/career/all',
+        url: '/api/v1/master/relation/all',
         method: 'post'
       },
-      fnDrawCallback: grid_career_callback,
+      fnDrawCallback: grid_relation_callback,
       columns: [
         { data: "id"},
-        { data: "career"},
+        { data: "relation_description"},
         { data: 'create_by'},
         { data: "create_date"},
         { data: 'update_by'},
@@ -106,7 +106,7 @@
       columnDefs: [
         {
           render: function(data, type, row) {
-            return '<a href="javascript:void(0)" class="--career-name" data-pk="'+row.id+'">'+data+'</a>';
+            return '<a href="javascript:void(0)" class="--relation-name" data-pk="'+row.id+'">'+data+'</a>';
           }, targets: 1
         }
       ]
@@ -118,14 +118,14 @@
     });
 
     $('#delete').on('click', function() {
-      var rowdata = rowSelected('#grid_career');
+      var rowdata = rowSelected('#grid_relation');
       if (rowdata.length !== 0) {
         if (confirm('Aru you sure?')) {
-          call_ajax('post', '/api/v1/master/career/delete', {
+          call_ajax('post', '/api/v1/master/relation/delete', {
             id: rowdata[0].id
           }).done(function(data) {
             if (data.result === true) {
-              reloadGrid('#grid_career', grid_career_callback);
+              reloadGrid('#grid_relation', grid_relation_callback);
             } else {
               alert(data.message);
             }
@@ -138,13 +138,13 @@
 
     $('#form_create').submit(function(e) {
       e.preventDefault();
-      call_ajax('post', '/api/v1/master/career/create', {
-        name_career: $('#name_career').val()
+      call_ajax('post', '/api/v1/master/relation/create', {
+        name_relation: $('#name_relation').val()
       }).done(function(data) {
         if ( data.result === true ) {
           $('#modal_create').modal('hide');
           $('#form_create').trigger('reset');
-          reloadGrid('#grid_career', grid_career_callback);
+          reloadGrid('#grid_relation', grid_relation_callback);
         } else {
           alert(data.message);
         }

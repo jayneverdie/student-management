@@ -33,15 +33,16 @@ class ReceiveAPI
 	    }
 	}
 
-	public function getParent($student_id) {
+	public function getStudentByParent($card_id) {
 	    try {
 	      return Database::rows(
 	        $this->db,
-	        "SELECT M.parent_id,M.student_id,P.parent_name,P.parent_lastname,R.relation_description
+	        "SELECT M.parent_id,M.student_id,N.name_prefix,S.student_name,S.student_lastname,S.student_nickname,S.sex_id,S.birthday,S.student_id AS Sstudent_id,P.card_id
 			FROM MapParentStudent M
 			LEFT JOIN ParentTrans P ON P.id = M.parent_id
-			LEFT JOIN Relation R ON R.id = M.relation
-			WHERE M.student_id = ?",[$student_id]
+			LEFT JOIN StudentTrans S ON S.id = M.student_id
+			LEFT JOIN NamePrefix N ON S.name_prefix_id = N.id
+			WHERE P.card_id = ?",[$card_id]
 	      );
 	    } catch (\Exception $e) {
 	      throw new Exception($e->getMessage());
@@ -127,6 +128,73 @@ class ReceiveAPI
 	      return $this->message->result(true, 'Create successful!');
 	    } else {
 	      return $this->message->result(false, 'Create failed!');
+	    }
+	}
+
+	public function Read($card_id) {
+	    try {
+	    	$isExists = Database::hasRows(
+		      $this->db,
+		      "SELECT *
+		      FROM ParentTrans
+		      WHERE card_id = ?",
+		      [
+		        trim($card_id)
+		      ]
+		    );
+
+		    $isExistsMap = Database::hasRows(
+		      $this->db,
+		      "SELECT M.*,P.card_id
+				FROM MapParentStudent M
+				LEFT JOIN ParentTrans P ON M.parent_id = P.id
+		      WHERE P.card_id = ?",
+		      [
+		        trim($card_id)
+		      ]
+		    );
+
+		    if ( $isExists === false ) {
+		      return $this->message->result(false, 'Card Id not found!');
+		    }
+
+		    if ( $isExistsMap === false ) {
+		      return $this->message->result(false, 'Card Id Map found!');
+		    }
+
+	      	return Database::rows(
+	        	$this->db,
+		        "SELECT MP.parent_id
+				      ,MP.student_id
+				      ,MP.relation
+				      ,MP.remark
+					  ,N.name_prefix AS Pname_prefix
+					  ,P.parent_name
+					  ,P.parent_lastname
+					  ,P.card_id
+					  ,PX.sex_description AS Psex_id
+					  ,P.birthday AS Pbirthday
+					  ,P.phone
+					  ,S.student_id AS Sstudent_id
+					  ,NS.name_prefix AS Sname_prefix
+					  ,S.student_name
+					  ,S.student_lastname
+					  ,S.student_nickname
+					  ,SX.sex_description AS Ssex_id
+					  ,S.birthday AS Sbirthday
+					  ,R.relation_description
+				FROM MapParentStudent MP
+				LEFT JOIN ParentTrans P ON MP.parent_id = P.id
+				LEFT JOIN NamePrefix N ON P.name_prefix_id = N.id
+				LEFT JOIN StudentTrans S ON MP.student_id = S.id
+				LEFT JOIN NamePrefix NS ON S.name_prefix_id = NS.id
+				LEFT JOIN Relation R ON MP.relation = R.id
+				LEFT JOIN Sex PX ON P.sex_id = PX.sex_id
+				LEFT JOIN Sex SX ON S.sex_id = SX.sex_id
+				WHERE P.card_id = ?",[$card_id]
+	      	);
+	    } catch (\Exception $e) {
+	      throw new Exception($e->getMessage());
 	    }
 	}
 
