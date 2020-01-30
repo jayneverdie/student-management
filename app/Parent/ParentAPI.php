@@ -219,7 +219,7 @@ class ParentAPI
     }
   }
 
-  public function getMapRelation() {
+  public function getMapRelation($parent_id) {
     try {
       return Database::rows(
         $this->db,
@@ -228,7 +228,8 @@ class ParentAPI
         LEFT JOIN StudentTrans S ON M.student_id = S.id
         LEFT JOIN NamePrefix N ON S.name_prefix_id = N.id
         LEFT JOIN Relation R ON M.relation = R.id
-        LEFT JOIN ClassRoom C ON S.classroom_id = C.id"
+        LEFT JOIN ClassRoom C ON S.classroom_id = C.id
+        WHERE M.parent_id = ?",[$parent_id]
       );
     } catch (\Exception $e) {
       throw new Exception($e->getMessage());
@@ -315,6 +316,23 @@ class ParentAPI
       return $this->message->result(true, 'Update successful!');
     } else {
       return $this->message->result(false, 'Update failed!');
+    }
+  }
+
+  public function mapDelete($id) {
+    $delete = Database::query(
+      $this->db,
+      "DELETE FROM MapParentStudent
+      WHERE id = ?",
+      [
+        $id
+      ]
+    );
+
+    if ( $delete ) {
+      return $this->message->result(true, 'Delete successful!');
+    } else {
+      return $this->message->result(false, 'Delete failed!');
     }
   }
   

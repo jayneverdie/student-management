@@ -295,6 +295,7 @@
                       <th>นาสกุล</th>
                       <th>ห้องเรียน</th>
                       <th>หมายเหตุ</th>
+                      <th>ลบ</th>
                     </tr>
                   </thead>
                 </table>
@@ -619,6 +620,29 @@
             });
           });
 
+          $('#grid_map .--delete-map').on('click', function(){
+
+            var id = $(this).data('pk');
+            $.ajax({
+                url: '/api/v1/parent/map/delete',
+                type : 'post',
+                cache : false,
+                dataType : 'json',
+                data : {
+                  id : id
+                }
+            })
+            .done(function(data) {
+              if ( data.result === true ) {
+                reloadGrid('#grid_map');
+              } else {
+                alert(data.message);
+              }
+            });
+            return false;
+            
+          });
+
         };
 
         loadGrid({
@@ -633,7 +657,7 @@
           lengthChange: false,
           destroy: true,
           ajax: {
-            url: '/api/v1/parent/map',
+            url: '/api/v1/parent/map?parent_id='+rowdata[0].id,
             method: 'post'
           },
           fnDrawCallback: grid_map_callback,
@@ -651,6 +675,11 @@
               render: function(data, type, row) {
                 return '<a href="javascript:void(0)" class="--relation-name" data-pk="'+row.relation+'">'+data+'</a>';
               }, targets: 1
+            },
+            {
+              render: function(data, type, row) {
+                return '<a href="javascript:void(0)" class="--delete-map" data-pk="'+row.id+'">'+'<button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>'+'</a>';
+              }, targets: 7
             }
           ]
         });

@@ -431,8 +431,51 @@
           call_ajax('get', '/api/v1/parent/readcard', {
           }).done(function(data) {
               if (data.result === false) {
-                  alert(data.message);
+                alert(data.message);
               } else {
+                $('#card_id').val(data.cid);
+                var card_id = data.cid;
+                call_ajax('post', '/api/v1/receive/read?card_id='+card_id, {
+                }).done(function(data) {
+                  if (data.result===false) {
+                    alert(data.message);
+                  }else{
+                    $('#Prelation').text(data[0].relation_description);
+                    $('#Pname_prefix').val(data[0].Pname_prefix);
+                    $('#Pparent_name').val(data[0].parent_name);
+                    $('#Pparent_lastname').val(data[0].parent_lastname);
+                    $('#Psex_id').val(data[0].Psex_id);
+                    $('#Pphone').val(data[0].phone);
+                    $('#Pbirthday').val(data[0].Pbirthday);
+                    
+                    $('#Sstudent_name').val(data[0].student_name); 
+                    $('#Sstudent_lastname').val(data[0].student_lastname); 
+                    $('#Sstudent_id').val(data[0].Sstudent_id); 
+                    $('#Sbirthday').val(data[0].Sbirthday);       
+                    $('#Ssex_id').val(data[0].Ssex_id);     
+                    $('#Sname_prefix').val(data[0].Sname_prefix);   
+                    $('#Ssudent_nickname').val(data[0].card_id);
+
+                    $('#send_student_id').val(data[0].student_id);
+                    $('#send_id').val(data[0].parent_id);
+
+                    call_ajax("post", "/api/v1/receive/load/student/by/parent?card_id="+data[0].card_id+"&ran="+Math.random()*99999).done(function(data) {
+                      $.each(data, function(i, v) {
+                          $("#Ssudent_nickname").append(
+                            "<option value='" + v.student_id + "'>" + v.student_nickname + "</option>"
+                          );
+                      });
+                    });
+
+                    var path_img = "/files/images/parent/"+data[0].card_id+"/"; 
+                    document.getElementById("Pimg_card").src = path_img+data[0].card_id+".jpg";
+
+                    var path_imgS = "/files/images/student/"+data[0].Sstudent_id+"/"; 
+                    document.getElementById("Simg_card").src = path_imgS+data[0].Sstudent_id+".jpg";
+                  }
+                  $('#select_card').html('<i class="fa fa-id-card"></i> Scan');
+                  $('#select_card').attr('disabled', false);
+                });
 
               }
               $('#select_card').html('<i class="fa fa-id-card"></i> Scan');

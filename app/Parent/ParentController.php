@@ -125,8 +125,8 @@ class ParentController
   public function getMapRelation($request, $response, $args) {
     try {
       $parsedBody = $request->getParsedBody();
-
-      $data = $this->parent->getMapRelation($this->datatables->filter($parsedBody));
+      $params = $request->getQueryParams();
+      $data = $this->parent->getMapRelation($params["parent_id"]);
       $pack = $this->datatables->get($data, $parsedBody);
 
       return $response->withJson($pack);
@@ -170,6 +170,16 @@ class ParentController
       );
 
       return $response->withJson($result);
+  }
+
+  public function mapDelete($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+
+    $result = $this->parent->mapDelete(
+      $parsedBody['id']
+    );
+
+    return $response->withJson($result);
   }
 
 }
