@@ -19,11 +19,13 @@ class ReceiveAPI
 	      $dateview_end = $dateview." 23:59";
 	      return Database::rows(
 	        $this->db,
-	        "SELECT S.id,N.name_prefix,S.student_id,S.student_name,S.student_lastname,S.student_nickname,S.classroom_id,C.classroom,SR.send_date
+	        "SELECT S.id,N.name_prefix,S.student_id,S.student_name,S.student_lastname,S.student_nickname,S.classroom_id,C.classroom,SR.send_date,P.parent_name+' '+P.parent_lastname AS parent_fullname_send,PP.parent_name+' '+PP.parent_lastname AS parent_fullname_receive 
 			FROM StudentTrans S
 			LEFT JOIN NamePrefix N ON S.name_prefix_id = N.id
 			LEFT JOIN ClassRoom C ON S.classroom_id = C.id
 			LEFT JOIN SendReceiveTime SR ON S.id = SR.student_id
+			LEFT JOIN ParentTrans P ON SR.send_id = P.id
+			LEFT JOIN ParentTrans PP ON SR.receive_id = PP.id
 			AND SR.send_date >= '$dateview_start'
 			AND SR.send_date <= '$dateview_end'
 	        WHERE $filter"
@@ -43,6 +45,51 @@ class ReceiveAPI
 			LEFT JOIN StudentTrans S ON S.id = M.student_id
 			LEFT JOIN NamePrefix N ON S.name_prefix_id = N.id
 			WHERE P.card_id = ?",[$card_id]
+	      );
+	    } catch (\Exception $e) {
+	      throw new Exception($e->getMessage());
+	    }
+	}
+
+	public function getStudentById($id) {
+	    try {
+	      return Database::rows(
+	        $this->db,
+	        "SELECT S.*,SX.sex_description,N.name_prefix
+			FROM StudentTrans S
+			LEFT JOIN Sex SX ON S.sex_id = SX.sex_id
+			LEFT JOIN NamePrefix N ON S.name_prefix_id = N.id
+			WHERE S.id = ?",[$id]
+	      );
+	    } catch (\Exception $e) {
+	      throw new Exception($e->getMessage());
+	    }
+	}
+
+	public function getRelationByStudent($student_id,$parent_id) {
+	    try {
+	      return Database::rows(
+	        $this->db,
+	        "SELECT MP.parent_id
+			      ,MP.student_id
+			      ,MP.relation
+			      ,MP.remark
+				  ,P.card_id
+				  ,S.student_id AS Sstudent_id
+				  ,NS.name_prefix AS Sname_prefix
+				  ,S.student_name
+				  ,S.student_lastname
+				  ,S.student_nickname
+				  ,SX.sex_description AS Ssex_id
+				  ,S.birthday AS Sbirthday
+				  ,R.relation_description
+			FROM MapParentStudent MP
+			LEFT JOIN ParentTrans P ON MP.parent_id = P.id
+			LEFT JOIN StudentTrans S ON MP.student_id = S.id
+			LEFT JOIN NamePrefix NS ON S.name_prefix_id = NS.id
+			LEFT JOIN Relation R ON MP.relation = R.id
+			LEFT JOIN Sex SX ON S.sex_id = SX.sex_id
+			WHERE MP.student_id = ? AND P.card_id = ?",[$student_id,$parent_id]
 	      );
 	    } catch (\Exception $e) {
 	      throw new Exception($e->getMessage());
@@ -90,10 +137,11 @@ class ReceiveAPI
 	      "SELECT *
 	      FROM SendReceiveTime
 	      WHERE send_id = ?
+	      AND student_id = ?
 	      AND send_date >= ?
 	      AND send_date <= ?",
 	      [
-	        trim($send_student_id),$send_chk1,$send_chk2
+	        $send_parent_id,$send_student_id,$send_chk1,$send_chk2
 	      ]
 	    );
 

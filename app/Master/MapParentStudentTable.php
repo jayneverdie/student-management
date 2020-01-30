@@ -2,13 +2,13 @@
 
 namespace App\Master;
 
-class ParentTable
+class MapParentStudentTable
 {
   public function __construct() {
     $this->field =  [
       'id'   => 'id',
-      'name' => 'name_prefix'
+      'name' => 'relation'
     ];
-    $this->table = 'ParentTrans';
+    $this->table = 'MapParentStudent';
   }
 }

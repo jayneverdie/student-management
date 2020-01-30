@@ -299,4 +299,23 @@ class ParentAPI
     }
   }
 
+  public function mapUpdate($name, $pk, $value, $table) {
+    $update = Database::query(
+      $this->db,
+      "UPDATE $table
+      SET $name = ?
+      WHERE id = ?",
+      [
+        $value,
+        $pk
+      ]
+    );
+
+    if ( $update ) {
+      return $this->message->result(true, 'Update successful!');
+    } else {
+      return $this->message->result(false, 'Update failed!');
+    }
+  }
+  
 }

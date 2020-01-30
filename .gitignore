@@ -4,6 +4,3 @@
 .env
 /src/config.php
 composer.lock
-/public/files
-/public/temp
-/public/bat

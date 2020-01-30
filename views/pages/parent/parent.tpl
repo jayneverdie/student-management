@@ -3,6 +3,7 @@
   td {
     padding: 10px;
   }  
+  .editable-popup{z-index: 9999 !important};
 </style>
 
 <section class="content">
@@ -598,6 +599,28 @@
           });
         });
 
+        var grid_map_callback = function() {
+
+          call_ajax('get', '/api/v1/master/getall/relation')
+          .done(function(data) {
+            // cap status
+            $('#grid_map .--relation-name').editable({
+              type: 'select',
+              name: 'relation',
+              url: '/api/v1/parent/relation/update',
+              title: 'Relation',
+              source: pack_dd(data, 'id', 'relation_description'),
+              success: function(response, newValue) {
+                if (response.result === false) {
+                  alert(response.message);
+                  window.location.reload();
+                }
+              }
+            });
+          });
+
+        };
+
         loadGrid({
           el: '#grid_map',
           processing: true,
@@ -613,6 +636,7 @@
             url: '/api/v1/parent/map',
             method: 'post'
           },
+          fnDrawCallback: grid_map_callback,
           columns: [
             { data: 'id'},
             { data: 'relation_description'},
@@ -621,6 +645,13 @@
             { data: 'student_lastname'},
             { data: 'classroom'},
             { data: 'remark'}
+          ],
+          columnDefs: [
+            {
+              render: function(data, type, row) {
+                return '<a href="javascript:void(0)" class="--relation-name" data-pk="'+row.relation+'">'+data+'</a>';
+              }, targets: 1
+            }
           ]
         });
 

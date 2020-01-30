@@ -42,6 +42,7 @@
             <th>ชื่อเล่น</th>
             <th>ห้องเรียน</th>
             <th>เวลาส่ง</th>
+            <th>ผู้ส่ง</th>
           </tr>
           <tr>
             <th>student_id</th>
@@ -50,6 +51,7 @@
             <th>nickname</th>
             <th>classroom</th>
             <th>send_date</th>
+            <th>parent_fullname_send</th>
           </tr>
         </thead>
       </table>
@@ -71,32 +73,30 @@
       <div class="modal-body">
         <!-- Content -->
         <form id="form_send" onsubmit="return submit_send()"> 
-          <div class="form-group col-md-12">
-              <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="send_time">วันที่ส่ง</label>
-                    <div class="input-group">
-                    <input type="text" class="form-control" name="send_time" id="send_time" required autocomplete="off">
-                        <span class="input-group-btn">
-                        <button class="btn btn-info" id="select_send_time" type="button">
-                        <i class="far fa-calendar-alt"></i>
-                        </button>
-                        </span>
-                    </div>
+          <div class="form-row col-md-12">
+            <div class="form-group col-md-3">
+                <label for="send_time">วันที่ส่ง</label>
+                <div class="input-group">
+                <input type="text" class="form-control" name="send_time" id="send_time" required autocomplete="off">
+                    <span class="input-group-btn">
+                    <button class="btn btn-info" id="select_send_time" type="button">
+                    <i class="far fa-calendar-alt"></i>
+                    </button>
+                    </span>
                 </div>
-                <div class="form-group col-md-2">
-                  <label for="send_time_hour">เวลา(ชั่วโมง)</label>
-                  <select name="send_time_hour" id="send_time_hour" class="form-control" required>
-                    <option value="">--เลือก--</option>
-                  </select>
-                </div>
-                <div class="form-group col-md-2">
-                  <label for="send_time_minute">เวลา(นาที)</label>
-                  <select name="send_time_minute" id="send_time_minute" class="form-control" required>
-                    <option value="">--เลือก--</option>
-                  </select>
-                </div>
-              </div>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="send_time_hour">เวลา(ชั่วโมง)</label>
+              <select name="send_time_hour" id="send_time_hour" class="form-control" required>
+                <option value="">--เลือก--</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="send_time_minute">เวลา(นาที)</label>
+              <select name="send_time_minute" id="send_time_minute" class="form-control" required>
+                <option value="">--เลือก--</option>
+              </select>
+            </div>
           </div>
           <div class="form-row col-md-12">
             <div class="modal-footer"></div>
@@ -220,7 +220,8 @@
                 <input type="text" name="Sstudent_id" id="Sstudent_id" class="form-control" readonly>
               </div>
           </div>
-
+          <input type="hidden" name="send_student_id" id="send_student_id">
+          <input type="hidden" name="send_id" id="send_id">
           <button type="submit" class="btn btn-primary">ยืนยัน</button>
         </form>
 
@@ -256,7 +257,7 @@
       order: [],
       orderCellsTop: true,
       modeSelect: "single",
-      lengthChange: false,
+      lengthChange: true,
       destroy: true,
       ajax: {
         url: '/api/v1/receive/all?dateview='+dateview,
@@ -269,7 +270,19 @@
         { data: 'student_lastname'},
         { data: 'student_nickname'},
         { data: 'classroom'},
-        { data: 'send_date'}
+        { data: 'send_date'},
+        { data: 'parent_fullname_send'}
+      ],
+      columnDefs: [
+        {
+          render: function(data, type, row) {
+            if (row.send_date!==null) {
+              return '<p class="bg-success" data-pk="'+row.send_date+'">'+data+'</p>';
+            }else{
+              return '<p class="bg-danger">-</p>';
+            }
+          }, targets: 5
+        }
       ]
     });
 
@@ -299,7 +312,8 @@
           { data: 'student_lastname'},
           { data: 'student_nickname'},
           { data: 'classroom'},
-          { data: 'send_date'}
+          { data: 'send_date'},
+          { data: 'parent_fullname_send'}
         ]
       });
 
@@ -307,12 +321,22 @@
 
     $('#btnSend').on('click', function(){
       $('#form_send').trigger('reset');
-      
+      $('#Ssudent_nickname').html('');
+
+      var path_img = "/files/images/"; 
+      document.getElementById("Pimg_card").src = path_img+"avatar.png";
+
+      var path_imgS = "/files/images/"; 
+      document.getElementById("Simg_card").src = path_imgS+"avatar.png";
+
       $("#send_time").datepicker({
         dateFormat: 'dd-mm-yy',
         autoclose: true,
         todayHighlight: true
       });
+
+      var today = new Date();
+
       $('#send_time').datepicker('setDate', today);
 
       var hournow = today.getHours().toString();
@@ -332,7 +356,7 @@
       $('#line_send_student_id').html("<button class='btn btn-success btn-sm'><i class='fas fa-angle-double-down'></i></button> <font color='green'>บันทึกการมาส่ง</font>");
       $('#modal_send').modal({backdrop: 'static'}); 
 
-      call_ajax("post", "/api/v1/receive/load/hours").done(function(data) {
+      call_ajax("post", "/api/v1/receive/load/hours?&ran="+Math.random()*99999).done(function(data) {
         $('#send_time_hour').html("<option value=''>- เลือก -</option>");
         $.each(data, function(i, v) {
           $("#send_time_hour").append(
@@ -342,7 +366,7 @@
         });
       });
 
-      call_ajax("post", "/api/v1/receive/load/minutes").done(function(data) {
+      call_ajax("post", "/api/v1/receive/load/minutes?&ran="+Math.random()*99999).done(function(data) {
         $('#send_time_minute').html("<option value=''>- เลือก -</option>");
         $.each(data, function(i, v) {
           $("#send_time_minute").append(
@@ -355,8 +379,10 @@
     });
 
     $('#select_card').on('click', function(){
-        // $('#select_card').html('<i class="fa fa-id-card"> </i> reading...');
-        // $('#select_card').attr('disabled', true);
+        $('#select_card').html('<i class="fa fa-id-card"> </i> reading...');
+        $('#select_card').attr('disabled', true);
+        $('#Ssudent_nickname').html('');
+
         if ($('#card_id').val()!=='') {
           var card_id = $('#card_id').val();
           call_ajax('post', '/api/v1/receive/read?card_id='+card_id, {
@@ -379,7 +405,10 @@
               $('#Ssex_id').val(data[0].Ssex_id);     
               $('#Sname_prefix').val(data[0].Sname_prefix);   
               $('#Ssudent_nickname').val(data[0].card_id);
-              
+
+              $('#send_student_id').val(data[0].student_id);
+              $('#send_id').val(data[0].parent_id);
+
               call_ajax("post", "/api/v1/receive/load/student/by/parent?card_id="+data[0].card_id+"&ran="+Math.random()*99999).done(function(data) {
                 $.each(data, function(i, v) {
                     $("#Ssudent_nickname").append(
@@ -394,6 +423,8 @@
               var path_imgS = "/files/images/student/"+data[0].Sstudent_id+"/"; 
               document.getElementById("Simg_card").src = path_imgS+data[0].Sstudent_id+".jpg";
             }
+            $('#select_card').html('<i class="fa fa-id-card"></i> Scan');
+            $('#select_card').attr('disabled', false);
           });
         }else{
           
@@ -402,48 +433,16 @@
               if (data.result === false) {
                   alert(data.message);
               } else {
-                  // var path_img = "/files/images/parent/"+data.cid+"/"; 
-                  // document.getElementById("img_card").src = path_img+data.cid+".jpg";
-                  // // cardid
-                  // $('#card_id').val(data.cid);
-                  // // nameprefix
-                  // if (data.prename=="นาย") {
-                  //     $('#name_prefix').val(1);
-                  // }else if(data.prename=="นางสาว"){
-                  //     $('#name_prefix').val(2);
-                  // }else if(data.prename=="นาง"){
-                  //     $('#name_prefix').val(3);
-                  // }
-                  // // fname
-                  // $('#parent_name').val(data.fname);
-                  // // lname
-                  // $('#parent_lastname').val(data.lname);
-                  // // sex
-                  // if (data.gender==1) {
-                  //     $('#sex_id').val('Male');
-                  // }else{
-                  //     $('#sex_id').val('Female');
-                  // }
-                  // // birthday
-                  // var ymd = data.dob;
-                  // var y = ymd.substring(0, 4);
-                  // var m = ymd.substring(4, 6);
-                  // var d = ymd.substring(6, 8);
-                  // $('#birthday').val(d+"-"+m+"-"+(y-543));
-                  // // address
-                  // var str_address = data.address;
-                  // var address = str_address.replace(/#/g, " ");
-                  // $('#address_first').val(address);
-              }
-              
-              // console.log(data);
 
-              // $('#select_card').html('<i class="fa fa-id-card"> Scan</i>');
-              // $('#select_card').attr('disabled', false);
+              }
+              $('#select_card').html('<i class="fa fa-id-card"></i> Scan');
+              $('#select_card').attr('disabled', false);
+
           }).fail(function(data) {
-            // console.log(data);
             setTimeout(function(){ 
               alert("Please check scanner!");
+              $('#select_card').html('<i class="fa fa-id-card"></i>  Scan');
+              $('#select_card').attr('disabled', false);
             }, 3000);
           });
           
@@ -452,34 +451,58 @@
     });
 
     $('#Ssudent_nickname').on('change',function(){
-      alert("change");
-    });
+      // alert("change");
+      var id = $('#Ssudent_nickname').val();
+      var card_id = $('#card_id').val();
+      call_ajax("post", "/api/v1/receive/load/student/by/id?id="+id+"&ran="+Math.random()*99999).done(function(data) {
+        $.each(data, function(i, v) {
+          $('#Sstudent_name').val(v.student_name);
+          $('#Sstudent_lastname').val(v.student_lastname);
+          $('#Sstudent_id').val(v.student_id);
+          $('#Sbirthday').val(v.birthday);
+          $('#Sname_prefix').val(v.name_prefix);
+          $('#Ssex_id').val(v.sex_description);
+          $('#send_student_id').val(v.id);
 
-    $('#submit_send').on('click',function() {
-      console.log($('#send_student_id').val()+"_"+$('#send_parent').val());
-      // $.ajax({
-      //     url: '/api/v1/receive/send',
-      //     type : 'post',
-      //     cache : false,
-      //     dataType : 'json',
-      //     data : {
-      //       send_student_id : $('#send_student_id').val(),
-      //       send_parent_id : $('#send_parent_id').val(),
-      //       send_time : $('#send_time').val(),
-      //       send_time_hour : $('#send_time_hour').val(),
-      //       send_time_minute : $('#send_time_minute').val()
-      //     }
-      // })
-      // .done(function(data) {
-      //   if ( data.result === true ) {
-      //     reloadGrid('#grid_receive');
-      //     $('#modal_send').modal('hide');
-      //   } else {
-      //     alert(data.message);
-      //   }
-      // });
+          var path_imgS = "/files/images/student/"+v.student_id+"/"; 
+          document.getElementById("Simg_card").src = path_imgS+v.student_id+".jpg";
+        });
+      });
+      call_ajax("post", "/api/v1/receive/load/relation/by/student?student_id="+id+"&parent_id="+card_id).done(function(data) {
+        $.each(data, function(i, v) {
+          $('#Prelation').text(data[0].relation_description);
+        });
+      });
+
     });
 
   });
+  
+    function submit_send() {
+
+      $.ajax({
+          url: '/api/v1/receive/send',
+          type : 'post',
+          cache : false,
+          dataType : 'json',
+          data : {
+            send_student_id : $('#send_student_id').val(),
+            send_parent_id : $('#send_id').val(),
+            send_time : $('#send_time').val(),
+            send_time_hour : $('#send_time_hour').val(),
+            send_time_minute : $('#send_time_minute').val()
+          }
+      })
+      .done(function(data) {
+        if ( data.result === true ) {
+          reloadGrid('#grid_receive');
+          $('#modal_send').modal('hide');
+        } else {
+          alert(data.message);
+        }
+      });
+      return false;
+    }
+
 </script>
 <?php $this->end() ?>

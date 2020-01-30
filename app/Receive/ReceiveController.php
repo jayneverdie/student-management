@@ -42,6 +42,26 @@ class ReceiveController
     }
   }
 
+  public function getStudentById($request, $response, $args) {
+    try {
+      $params = $request->getQueryParams();
+
+      return $response->withJson($this->receive->getStudentById($params["id"]));
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
+  public function getRelationByStudent($request, $response, $args) {
+    try {
+      $params = $request->getQueryParams();
+
+      return $response->withJson($this->receive->getRelationByStudent($params["student_id"],$params["parent_id"]));
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
   public function getHours($request, $response, $args) {
     try {
       return $response->withJson($this->receive->getHours());

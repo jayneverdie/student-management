@@ -34,4 +34,7 @@ $app->group('/api/v1/master', function () use ($app, $auth, $accessApi) {
   $app->post('/education/update', 'App\Master\MasterController:educationUpdate')->add($auth);
   $app->post('/education/create', 'App\Master\MasterController:educationCreate')->add($auth);
   $app->post('/education/delete', 'App\Master\MasterController:educationDelete')->add($auth);
+
+  // editable
+  $app->get('/getall/relation', 'App\Master\MasterController:getAllRelation')->add($auth);
 });

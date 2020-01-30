@@ -220,5 +220,10 @@ class MasterController
     return $response->withJson($result);
   }
 
+  // editable
+  public function getAllRelation($request, $response, $args) {
+    return $response->withJson($this->master->getAllRelation());
+  }
+
 }
 

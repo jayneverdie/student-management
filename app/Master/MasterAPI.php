@@ -416,4 +416,11 @@ class MasterAPI
     }
   }
 
+  public function getAllRelation() {
+    return Database::rows(
+      $this->db,
+      "SELECT * FROM Relation"
+    );
+  }
+  
 }
