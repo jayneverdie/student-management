@@ -53,7 +53,7 @@
       <div class="modal-body">
         <!-- Content -->
         <form id="form_new_user">
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="user_Employee">Employee</label>
             <div class="row">
 				     <div class="col-md-12">
@@ -67,12 +67,21 @@
 				      </div>
 				    </div>
 			     </div>
-          </div>
+          </div> -->
           <div class="form-group">
             <label for="user_login">Username</label>
-            <input type="text" name="user_login" id="user_login" class="form-control" autofocus autocomplete="off" required readonly>
-            <input type="hidden" name="user_firstnameAdd" id="user_firstnameAdd" class="form-control" autofocus autocomplete="off" required>
-            <input type="hidden" name="user_lastnameAdd" id="user_lastnameAdd" class="form-control" autofocus autocomplete="off" required>
+            <input type="text" name="user_login" id="user_login" class="form-control" autofocus autocomplete="off" required>
+            <input type="hidden" name="user_Employee" id="user_Employee" class="form-control" value="1">
+            <!-- <input type="hidden" name="user_firstnameAdd" id="user_firstnameAdd" class="form-control" autofocus autocomplete="off" required>
+            <input type="hidden" name="user_lastnameAdd" id="user_lastnameAdd" class="form-control" autofocus autocomplete="off" required> -->
+          </div>
+          <div class="form-group">
+            <label for="user_firstnameAdd">FirstName</label>
+            <input type="text" name="user_firstnameAdd" id="user_firstnameAdd" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="user_lastnameAdd">LastName</label>
+            <input type="text" name="user_lastnameAdd" id="user_lastnameAdd" class="form-control" required>
           </div>
           <div class="form-group">
             <label for="user_password">Password</label>

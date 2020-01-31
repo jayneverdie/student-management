@@ -35,6 +35,13 @@ $app->group('/api/v1/master', function () use ($app, $auth, $accessApi) {
   $app->post('/education/create', 'App\Master\MasterController:educationCreate')->add($auth);
   $app->post('/education/delete', 'App\Master\MasterController:educationDelete')->add($auth);
 
+  // classroom
+  $app->get('/classroom', 'App\Master\MasterController:ViewClassroom')->add($auth);
+  $app->post('/classroom/all', 'App\Master\MasterController:classroomAll')->add($auth);
+  $app->post('/classroom/update', 'App\Master\MasterController:classroomUpdate')->add($auth);
+  $app->post('/classroom/create', 'App\Master\MasterController:classroomCreate')->add($auth);
+  $app->post('/classroom/delete', 'App\Master\MasterController:classroomDelete')->add($auth);
+
   // editable
   $app->get('/getall/relation', 'App\Master\MasterController:getAllRelation')->add($auth);
 });

@@ -6,6 +6,7 @@ use App\Master\MasterAPI;
 use App\Master\PrefixTable;
 use App\Master\RelationTable;
 use App\Master\EducationTable;
+use App\Master\ClassroomTable;
 use App\Common\View;
 use App\Common\Datatables;
 
@@ -18,6 +19,7 @@ class MasterController
     $this->career_table = new CareerTable;
     $this->relation_table = new RelationTable;
     $this->education_table = new EducationTable;
+    $this->classroom_table = new ClassroomTable;
     $this->datatables = new Datatables;
   }
 
@@ -214,6 +216,56 @@ class MasterController
     $parsedBody = $request->getParsedBody();
 
     $result = $this->master->educationDelete(
+      $parsedBody['id']
+    );
+
+    return $response->withJson($result);
+  }
+
+  // Classroom
+  public function ViewClassroom($request, $response, $args) {
+    return $this->view->render('pages/master/classroom');
+  }
+
+  public function classroomAll($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+
+    $data = $this->master->classroomAll($this->datatables->filter($parsedBody));
+    $pack = $this->datatables->get($data, $parsedBody);
+
+    return $response->withJson($pack);
+  }
+
+  public function classroomUpdate($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+
+      $result = $this->master->update(
+        $this->classroom_table->field[$parsedBody['name']],
+        $parsedBody['pk'],
+        $parsedBody['value'],
+        $this->classroom_table->table
+      );
+
+      return $response->withJson($result);
+  }
+
+  public function classroomCreate($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+
+    if ( trim($parsedBody['name_classroom']) === '') {
+      return $response->withJson($this->message->result(false, 'Data must not be blank!'));
+    }
+
+    $result = $this->master->classroomCreate(
+      $parsedBody['name_classroom']
+    );
+    return $response->withJson($result);
+  }
+
+  public function classroomDelete($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+
+    $result = $this->master->classroomDelete(
       $parsedBody['id']
     );
 

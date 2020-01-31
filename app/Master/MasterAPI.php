@@ -219,7 +219,7 @@ class MasterAPI
     );
 
     if ( $isUsingParent === true || $isUsingTeacher === true ) {
-      return $this->message->result(false, 'This namefix is using!');
+      return $this->message->result(false, 'This career is using!');
     }
 
     $delete = Database::query(
@@ -303,7 +303,7 @@ class MasterAPI
     );
 
     if ( $isUsingMapParent ) {
-      return $this->message->result(false, 'This namefix is using!');
+      return $this->message->result(false, 'This relation is using!');
     }
 
     $delete = Database::query(
@@ -397,12 +397,96 @@ class MasterAPI
     );
 
     if ( $isUsingParent === true || $isUsingTeacher === true ) {
-      return $this->message->result(false, 'This namefix is using!');
+      return $this->message->result(false, 'This education is using!');
     }
 
     $delete = Database::query(
       $this->db,
       "DELETE FROM Education
+      WHERE id = ?",
+      [
+        $id
+      ]
+    );
+
+    if ( $delete ) {
+      return $this->message->result(true, 'Delete successful!');
+    } else {
+      return $this->message->result(false, 'Delete failed!');
+    }
+  }
+
+  public function classroomAll($filter) {
+    return Database::rows(
+      $this->db,
+      "SELECT 
+        N.id
+        ,N.classroom
+        ,N.create_date
+        ,N.create_by
+        ,N.update_date
+        ,N.update_by
+      FROM classroom N
+      WHERE $filter"
+    );
+  }
+
+  public function classroomCreate($name) {
+
+    $isExists = Database::hasRows(
+      $this->db,
+      "SELECT classroom 
+      FROM ClassRoom
+      WHERE classroom = ?",
+      [
+        trim($name)
+      ]
+    );
+
+    if ( $isExists === true ) {
+      return $this->message->result(false, 'This name already exists!');
+    }
+
+    $auth = new JWT;
+    $user_data = $auth->verifyToken(); 
+    $username = $user_data['data']['user_data']->username;
+
+    $create = Database::query(
+      $this->db,
+      "INSERT INTO ClassRoom(classroom, create_by, create_date)
+      VALUES(?, ?, getdate())",
+      [
+        $name,
+        $username
+      ]
+    );
+
+    if ( $create ) {
+      return $this->message->result(true, 'Create successful!');
+    } else {
+      return $this->message->result(false, 'Create failed!');
+    }
+  }
+
+  public function classroomDelete($id) {
+
+    $isUsingStudent = Database::hasRows(
+      $this->db,
+      "SELECT classroom_id 
+      FROM StudentTrans
+      WHERE classroom_id = ?",
+      [
+        $id
+      ]
+    );
+
+    if ( $isUsingStudent === true ) {
+      return $this->message->result(false, 'This classroom is using!');
+    }
+
+    $delete = Database::query(
+      $this->db,
+      "DELETE FROM Classroom
       WHERE id = ?",
       [
         $id
