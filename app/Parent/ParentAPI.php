@@ -104,6 +104,33 @@ class ParentAPI
     }
   }
 
+  public function update($name, $pk, $value, $table) {
+
+    $auth = new JWT;
+    $user_data = $auth->verifyToken(); 
+    $username = $user_data['data']['user_data']->username;
+
+    $update = Database::query(
+      $this->db,
+      "UPDATE $table
+      SET $name = ?
+      , update_by = ?
+      , update_date = getdate()
+      WHERE id = ?",
+      [
+        $value,
+        $username,
+        $pk
+      ]
+    );
+
+    if ( $update ) {
+      return $this->message->result(true, 'Update successful!');
+    } else {
+      return $this->message->result(false, 'Update failed!');
+    }
+  }
+  
   public function create(
     $card_id,
     $name_prefix,

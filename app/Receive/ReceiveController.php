@@ -82,13 +82,24 @@ class ReceiveController
     try {
       $parsedBody = $request->getParsedBody();
 
-      $result = $this->receive->Send(
-        $parsedBody["send_student_id"],
-        $parsedBody["send_parent_id"],
-        $parsedBody["send_time"],
-        $parsedBody["send_time_hour"],
-        $parsedBody["send_time_minute"]
-      );
+      if ($parsedBody["form_type"]==="send") {
+        $result = $this->receive->Send(
+          $parsedBody["send_student_id"],
+          $parsedBody["send_parent_id"],
+          $parsedBody["send_time"],
+          $parsedBody["send_time_hour"],
+          $parsedBody["send_time_minute"]
+        );
+      }else{
+        $result = $this->receive->Receive(
+          $parsedBody["send_student_id"],
+          $parsedBody["send_parent_id"],
+          $parsedBody["send_time"],
+          $parsedBody["send_time_hour"],
+          $parsedBody["send_time_minute"]
+        );
+      }
+      
       return $response->withJson($result);
     } catch (\Exception $e) {
       return [];

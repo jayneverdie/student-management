@@ -19,13 +19,28 @@ class ReceiveAPI
 	      $dateview_end = $dateview." 23:59";
 	      return Database::rows(
 	        $this->db,
-	        "SELECT S.id,N.name_prefix,S.student_id,S.student_name,S.student_lastname,S.student_nickname,S.classroom_id,C.classroom,SR.send_date,P.parent_name+' '+P.parent_lastname AS parent_fullname_send,PP.parent_name+' '+PP.parent_lastname AS parent_fullname_receive 
+	        "SELECT S.id,
+	        		N.name_prefix,
+	        		S.student_id,
+	        		S.student_name,
+	        		S.student_lastname,
+	        		S.student_nickname,
+					S.classroom_id,
+					C.classroom
+			,(SELECT send_date FROM SendReceiveTime WHERE send_date >='$dateview_start' AND send_date <= '$dateview_end' AND student_id=S.id) AS send_date
+			,(SELECT XPR.parent_name+' '+XPR.parent_lastname
+			FROM SendReceiveTime XR
+			LEFT JOIN ParentTrans XPR ON XR.send_id = XPR.id
+			WHERE XR.send_date >='$dateview_start' AND XR.send_date <= '$dateview_end' AND XR.student_id=S.id) AS parent_fullname_send
+			,(SELECT receive_date FROM SendReceiveTime WHERE receive_date >='$dateview_start' AND receive_date <= '$dateview_end' AND student_id=S.id) AS receive_date
+			,(SELECT XPR.parent_name+' '+XPR.parent_lastname
+			FROM SendReceiveTime XR
+			LEFT JOIN ParentTrans XPR ON XR.receive_id = XPR.id
+			WHERE XR.receive_date >='$dateview_start' AND XR.receive_date <= '$dateview_end' AND XR.student_id=S.id) AS parent_fullname_receive
 			FROM StudentTrans S
 			LEFT JOIN NamePrefix N ON S.name_prefix_id = N.id
 			LEFT JOIN ClassRoom C ON S.classroom_id = C.id
 			LEFT JOIN SendReceiveTime SR ON S.id = SR.student_id
-			LEFT JOIN ParentTrans P ON SR.send_id = P.id
-			LEFT JOIN ParentTrans PP ON SR.receive_id = PP.id
 			AND SR.send_date >= '$dateview_start'
 			AND SR.send_date <= '$dateview_end'
 	        WHERE $filter"
@@ -171,6 +186,97 @@ class ReceiveAPI
 	        $username
 	      ]
 	    );
+
+	    if ( $create ) {
+	      return $this->message->result(true, 'Create successful!');
+	    } else {
+	      return $this->message->result(false, 'Create failed!');
+	    }
+	}
+
+	public function Receive(
+	    $send_student_id,
+	    $send_parent_id,
+	    $send_time,
+	    $send_time_hour,
+	    $send_time_minute
+	) {
+
+		$send_time = date('Y-m-d', strtotime($send_time));
+	    $send_chk1 = $send_time." 00:00";
+	    $send_chk2 = $send_time." 23:59";
+	    
+	    $isExists = Database::hasRows(
+	      $this->db,
+	      "SELECT *
+	      FROM SendReceiveTime
+	      WHERE receive_id = ?
+	      AND student_id = ?
+	      AND receive_date >= ?
+	      AND receive_date <= ?",
+	      [
+	        $send_parent_id,$send_student_id,$send_chk1,$send_chk2
+	      ]
+	    );
+
+	    if ( $isExists === true ) {
+	      return $this->message->result(false, 'This id already exists!');
+	    }
+
+	    $auth = new JWT;
+	    $user_data = $auth->verifyToken(); 
+	    $username = $user_data['data']['user_data']->username;
+	    $send_time = $send_time." ".$send_time_hour.":".$send_time_minute;
+
+	    $isExistsSend = Database::hasRows(
+	      $this->db,
+	      "SELECT *
+	      FROM SendReceiveTime
+	      WHERE send_id = ?
+	      AND student_id = ?
+	      AND send_date >= ?
+	      AND send_date <= ?",
+	      [
+	        $send_parent_id,$send_student_id,$send_chk1,$send_chk2
+	      ]
+	    );
+
+	    if ( $isExistsSend === true ) {
+	    	$create = Database::query(
+		      $this->db,
+		      "UPDATE SendReceiveTime 
+		      SET receive_date = ?, receive_id = ?, update_date = getdate(), update_by = ?
+		      WHERE student_id = ? 
+		      AND send_date >= ?
+	      	  AND send_date <= ?",
+		      [
+		      	$send_time,
+		      	$send_parent_id,
+		        $username,
+		        $send_student_id,
+		        $send_chk1,
+		        $send_chk2
+		      ]
+		    );
+	    }else{
+	    	$create = Database::query(
+		      $this->db,
+		      "INSERT INTO SendReceiveTime(
+		        student_id
+		        ,receive_date
+		        ,receive_id
+		        ,create_date
+		        ,create_by
+		      )
+		      VALUES(?, ?, ?, getdate(), ?)",
+		      [
+		        $send_student_id,
+		        $send_time,
+		        $send_parent_id,
+		        $username
+		      ]
+		    );
+	    }
 
 	    if ( $create ) {
 	      return $this->message->result(true, 'Create successful!');

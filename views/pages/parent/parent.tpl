@@ -77,7 +77,7 @@
                     <div class="col-md-4">
                         <label for="card_id">เลขบัตรประจำตัวประชาชน</label>
                         <div class="input-group">
-                        <input type="text" class="form-control" name="card_id" id="card_id" required>
+                        <input type="text" class="form-control" name="card_id" id="card_id" maxlength="13" required>
                             <span class="input-group-btn">
                             <button class="btn btn-info" id="select_card" type="button">
                             <i class="fa fa-id-card"></i> Scan
@@ -116,7 +116,7 @@
                 </div>
                 <div class="form-group col-md-4">
                   <label for="phone">เบอร์โทรศัพท์</label>
-                  <input type="text" name="phone" id="phone" class="form-control" autocomplete="off" required>
+                  <input type="text" name="phone" id="phone" class="form-control" autocomplete="off">
                 </div>
             </div>
             <div class="form-row">
@@ -134,7 +134,7 @@
                 </div>
                 <div class="form-group col-md-4">
                   <label for="email">e-mail</label>
-                  <input type="email" name="email" id="email" class="form-control" autocomplete="off" required>
+                  <input type="text" name="email" id="email" class="form-control" autocomplete="off">
                 </div>
             </div>
             <div class="form-row">
@@ -445,6 +445,61 @@
         });
     });
 
+    var grid_parent_callback = function() {
+      $('#grid_parent .--phone-name').editable({
+        type: 'text',
+        name: 'phone',
+        url: '/api/v1/parent/update',
+        title: 'Name',
+        success: function(response, newValue) {
+          if (response.result === false) {
+            alert(response.message);
+            window.location.reload();
+          }
+          reloadGrid('#grid_parent', grid_parent_callback);
+        }
+      });
+      $('#grid_parent .--parent-name').editable({
+        type: 'text',
+        name: 'parent_name',
+        url: '/api/v1/parent/update',
+        title: 'Name',
+        success: function(response, newValue) {
+          if (response.result === false) {
+            alert(response.message);
+            window.location.reload();
+          }
+          reloadGrid('#grid_parent', grid_parent_callback);
+        }
+      });
+      $('#grid_parent .--parent-lastname').editable({
+        type: 'text',
+        name: 'parent_lastname',
+        url: '/api/v1/parent/update',
+        title: 'Name',
+        success: function(response, newValue) {
+          if (response.result === false) {
+            alert(response.message);
+            window.location.reload();
+          }
+          reloadGrid('#grid_parent', grid_parent_callback);
+        }
+      });
+      $('#grid_parent .--email-name').editable({
+        type: 'text',
+        name: 'email',
+        url: '/api/v1/parent/update',
+        title: 'Name',
+        success: function(response, newValue) {
+          if (response.result === false) {
+            alert(response.message);
+            window.location.reload();
+          }
+          reloadGrid('#grid_parent', grid_parent_callback);
+        }
+      });
+    };
+
     loadGrid({
       el: '#grid_parent',
       processing: true,
@@ -459,7 +514,7 @@
         url: '/api/v1/parent/all',
         method: 'post'
       },
-      // fnDrawCallback: grid_parent_callback,
+      fnDrawCallback: grid_parent_callback,
       columns: [
         { data: 'id'},
         { data: 'name_prefix'},
@@ -470,12 +525,29 @@
         { data: 'phone'},
         { data: 'birthday'},
         { data: 'email'},
-        // { data: 'address_first'},
-        // { data: 'address_second'},
-        // { data: 'address_third'},
-        // { data: 'education'},
-        // { data: 'career'},
         { data: 'status_name'}
+      ],
+      columnDefs: [
+        {
+          render: function(data, type, row) {
+            return '<a href="javascript:void(0)" class="--parent-name" data-pk="'+row.id+'">'+data+'</a>';
+          }, targets: 2
+        },
+        {
+          render: function(data, type, row) {
+            return '<a href="javascript:void(0)" class="--parent-lastname" data-pk="'+row.id+'">'+data+'</a>';
+          }, targets: 3
+        },
+        {
+          render: function(data, type, row) {
+            return '<a href="javascript:void(0)" class="--phone-name" data-pk="'+row.id+'">'+data+'</a>';
+          }, targets: 6
+        },
+        {
+          render: function(data, type, row) {
+            return '<a href="javascript:void(0)" class="--email-name" data-pk="'+row.id+'">'+data+'</a>';
+          }, targets: 8
+        }
       ]
     });
 
@@ -750,6 +822,14 @@
           alert(data.message);
         }
       });
+    });
+
+    $('#name_prefix').on('change',function(){
+      if ($('#name_prefix').val()==1 || $('#name_prefix').val()==4) {
+        $('#sex_id').val('Male');
+      }else{
+        $('#sex_id').val('Female');
+      }
     });
   });
     

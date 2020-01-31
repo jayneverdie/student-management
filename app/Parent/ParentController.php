@@ -7,6 +7,7 @@ use App\Common\View;
 use App\Common\Datatables;
 use App\Common\Tool;
 use App\Master\MapParentStudentTable;
+use App\Parent\ParentTable;
 
 class ParentController
 {
@@ -16,6 +17,7 @@ class ParentController
     $this->datatables = new Datatables;
     $this->tool = new Tool;
     $this->map_table = new MapParentStudentTable;
+    $this->parent_table = new ParentTable;
   }
 
   public function ViewParent($request, $response, $args) {
@@ -61,6 +63,19 @@ class ParentController
     } catch (\Exception $e) {
       return [];
     }
+  }
+
+  public function update($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+
+      $result = $this->parent->update(
+        $this->parent_table->field[$parsedBody['name']],
+        $parsedBody['pk'],
+        $parsedBody['value'],
+        $this->parent_table->table
+      );
+
+      return $response->withJson($result);
   }
 
   public function create($request, $response, $args) {

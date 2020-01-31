@@ -9,6 +9,7 @@ $app->group('/api/v1/parent', function () use ($app, $auth, $accessApi) {
 	$app->post('/load/education', 'App\Parent\ParentController:getEducation')->add($auth);
 	$app->post('/load/career', 'App\Parent\ParentController:getCareer')->add($auth);
 	$app->post('/create', 'App\Parent\ParentController:create')->add($auth);
+	$app->post('/update', 'App\Parent\ParentController:update')->add($auth);
 	$app->get('/readcard', 'App\Parent\ParentController:readCard')->add($auth);
 	$app->get('/loadfile', 'App\Parent\ParentController:loadFile')->add($auth);
 	$app->post('/map', 'App\Parent\ParentController:getMapRelation')->add($auth);

@@ -27,7 +27,7 @@
         <div class="col-md-4">
           <div class="form-group">
           <button class="btn btn-success" id="btnSend"><i class="fas fa-angle-double-down"></i> ส่ง</button>
-          <button class="btn btn-warning" id="send"><i class="fas fa-angle-double-up"></i> รับ</button>
+          <button class="btn btn-warning" id="btnReceive"><i class="fas fa-angle-double-up"></i> รับ</button>
           </div>
         </div>
         <br><br><br>
@@ -43,6 +43,8 @@
             <th>ห้องเรียน</th>
             <th>เวลาส่ง</th>
             <th>ผู้ส่ง</th>
+            <th>เวลารับ</th>
+            <th>ผู้รับ</th>
           </tr>
           <tr>
             <th>student_id</th>
@@ -52,6 +54,8 @@
             <th>classroom</th>
             <th>send_date</th>
             <th>parent_fullname_send</th>
+            <th>receive_date</th>
+            <th>parent_fullname_receive</th>
           </tr>
         </thead>
       </table>
@@ -101,12 +105,6 @@
           <div class="form-row col-md-12">
             <div class="modal-footer"></div>
           </div>
-          <!-- <div class="form-row col-md-12">
-            <div class="form-group col-md-12">
-              <input type="checkbox" name="uncard" id="uncard" style="width: 1.3em; height: 1.3em;">
-              <label>กรณีไม่มีบัตร</label>
-            </div>
-          </div> -->
           <div class="form-row col-md-12">
             <div class="col-md-4">
               <label for="card_id">เลขบัตรประจำตัวประชาชน</label>
@@ -119,6 +117,13 @@
                   </span>
               </div>
               <br>
+            </div>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+              <div class="input-group">
+                <a href="/parent/view" target="_blank">เพิ่มผู้ปกครอง</a>
+              </div>
             </div>
           </div>
 
@@ -222,6 +227,7 @@
           </div>
           <input type="hidden" name="send_student_id" id="send_student_id">
           <input type="hidden" name="send_id" id="send_id">
+          <input type="hidden" name="form_type" id="form_type">
           <button type="submit" class="btn btn-primary">ยืนยัน</button>
         </form>
 
@@ -271,7 +277,9 @@
         { data: 'student_nickname'},
         { data: 'classroom'},
         { data: 'send_date'},
-        { data: 'parent_fullname_send'}
+        { data: 'parent_fullname_send'},
+        { data: 'receive_date'},
+        { data: 'parent_fullname_receive'}
       ],
       columnDefs: [
         {
@@ -282,6 +290,15 @@
               return '<p class="bg-danger">-</p>';
             }
           }, targets: 5
+        },
+        {
+          render: function(data, type, row) {
+            if (row.receive_date!==null) {
+              return '<p class="bg-warning" data-pk="'+row.receive_date+'">'+data+'</p>';
+            }else{
+              return '<p class="bg-danger">-</p>';
+            }
+          }, targets: 7
         }
       ]
     });
@@ -313,7 +330,29 @@
           { data: 'student_nickname'},
           { data: 'classroom'},
           { data: 'send_date'},
-          { data: 'parent_fullname_send'}
+          { data: 'parent_fullname_send'},
+          { data: 'receive_date'},
+          { data: 'parent_fullname_receive'}
+        ],
+        columnDefs: [
+          {
+            render: function(data, type, row) {
+              if (row.send_date!==null) {
+                return '<p class="bg-success" data-pk="'+row.send_date+'">'+data+'</p>';
+              }else{
+                return '<p class="bg-danger">-</p>';
+              }
+            }, targets: 5
+          },
+          {
+          render: function(data, type, row) {
+            if (row.receive_date!==null) {
+              return '<p class="bg-warning" data-pk="'+row.receive_date+'">'+data+'</p>';
+            }else{
+              return '<p class="bg-danger">-</p>';
+            }
+          }, targets: 7
+        }
         ]
       });
 
@@ -322,7 +361,7 @@
     $('#btnSend').on('click', function(){
       $('#form_send').trigger('reset');
       $('#Ssudent_nickname').html('');
-
+      $('#form_type').val('send');
       var path_img = "/files/images/"; 
       document.getElementById("Pimg_card").src = path_img+"avatar.png";
 
@@ -354,6 +393,65 @@
       });
 
       $('#line_send_student_id').html("<button class='btn btn-success btn-sm'><i class='fas fa-angle-double-down'></i></button> <font color='green'>บันทึกการมาส่ง</font>");
+      $('#modal_send').modal({backdrop: 'static'}); 
+
+      call_ajax("post", "/api/v1/receive/load/hours?&ran="+Math.random()*99999).done(function(data) {
+        $('#send_time_hour').html("<option value=''>- เลือก -</option>");
+        $.each(data, function(i, v) {
+          $("#send_time_hour").append(
+            "<option value='" + v.hour + "'>" + v.hour + "</option>"
+          );
+          $('#send_time_hour').val(hournow);
+        });
+      });
+
+      call_ajax("post", "/api/v1/receive/load/minutes?&ran="+Math.random()*99999).done(function(data) {
+        $('#send_time_minute').html("<option value=''>- เลือก -</option>");
+        $.each(data, function(i, v) {
+          $("#send_time_minute").append(
+            "<option value='" + v.minute + "'>" + v.minute + "</option>"
+          );
+          $('#send_time_minute').val(minutenow);
+        });
+      });
+
+    });
+
+    $('#btnReceive').on('click', function(){
+      $('#form_send').trigger('reset');
+      $('#Ssudent_nickname').html('');
+      $('#form_type').val('receive');
+      var path_img = "/files/images/"; 
+      document.getElementById("Pimg_card").src = path_img+"avatar.png";
+
+      var path_imgS = "/files/images/"; 
+      document.getElementById("Simg_card").src = path_imgS+"avatar.png";
+
+      $("#send_time").datepicker({
+        dateFormat: 'dd-mm-yy',
+        autoclose: true,
+        todayHighlight: true
+      });
+
+      var today = new Date();
+
+      $('#send_time').datepicker('setDate', today);
+
+      var hournow = today.getHours().toString();
+      if (hournow.length===1) {
+        hournow = "0"+hournow; 
+      }
+
+      var minutenow = today.getMinutes().toString();
+      if (minutenow.length===1) {
+        minutenow = "0"+minutenow; 
+      }
+
+      $('#select_send_time').on('click',function(){
+        $('#send_time').datepicker('show');
+      });
+
+      $('#line_send_student_id').html("<button class='btn btn-warning btn-sm'><i class='fas fa-angle-double-up'></i></button> <font color='#ffc107'>บันทึกการมารับ</font>");
       $('#modal_send').modal({backdrop: 'static'}); 
 
       call_ajax("post", "/api/v1/receive/load/hours?&ran="+Math.random()*99999).done(function(data) {
@@ -494,7 +592,7 @@
     });
 
     $('#Ssudent_nickname').on('change',function(){
-      // alert("change");
+
       var id = $('#Ssudent_nickname').val();
       var card_id = $('#card_id').val();
       call_ajax("post", "/api/v1/receive/load/student/by/id?id="+id+"&ran="+Math.random()*99999).done(function(data) {
@@ -533,7 +631,8 @@
             send_parent_id : $('#send_id').val(),
             send_time : $('#send_time').val(),
             send_time_hour : $('#send_time_hour').val(),
-            send_time_minute : $('#send_time_minute').val()
+            send_time_minute : $('#send_time_minute').val(),
+            form_type : $('#form_type').val()
           }
       })
       .done(function(data) {
