@@ -10,4 +10,5 @@ $app->group('/api/v1/student', function () use ($app, $auth, $accessApi) {
 	$app->post('/load/classroom', 'App\Student\StudentController:getClassroom')->add($auth);
 	$app->post('/create', 'App\Student\StudentController:create')->add($auth);
 	$app->get('/readcard', 'App\Student\StudentController:readCard')->add($auth);
+	$app->post('/all/by', 'App\Student\StudentController:allBy')->add($auth);
 });

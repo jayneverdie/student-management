@@ -147,45 +147,47 @@ class ReceiveAPI
 	    $send_chk1 = $send_time." 00:00";
 	    $send_chk2 = $send_time." 23:59";
 	    
-	    $isExists = Database::hasRows(
-	      $this->db,
-	      "SELECT *
-	      FROM SendReceiveTime
-	      WHERE send_id = ?
-	      AND student_id = ?
-	      AND send_date >= ?
-	      AND send_date <= ?",
-	      [
-	        $send_parent_id,$send_student_id,$send_chk1,$send_chk2
-	      ]
-	    );
-
-	    if ( $isExists === true ) {
-	      return $this->message->result(false, 'This id already exists!');
-	    }
-
 	    $auth = new JWT;
 	    $user_data = $auth->verifyToken(); 
 	    $username = $user_data['data']['user_data']->username;
 	    $send_time = $send_time." ".$send_time_hour.":".$send_time_minute;
 
-	    $create = Database::query(
-	      $this->db,
-	      "INSERT INTO SendReceiveTime(
-	        student_id
-	        ,send_date
-	        ,send_id
-	        ,create_date
-	        ,create_by
-	      )
-	      VALUES(?, ?, ?, getdate(), ?)",
-	      [
-	        $send_student_id,
-	        $send_time,
-	        $send_parent_id,
-	        $username
-	      ]
-	    );
+    	for ($i=0; $i < count($send_student_id); $i++) { 
+    		$isExists = Database::hasRows(
+		      $this->db,
+		      "SELECT *
+		      FROM SendReceiveTime
+		      WHERE send_id = ?
+		      AND student_id = ?
+		      AND send_date >= ?
+		      AND send_date <= ?",
+		      [
+		        $send_parent_id,$send_student_id[$i],$send_chk1,$send_chk2
+		      ]
+		    );
+
+		    if ( $isExists === true ) {
+		      return $this->message->result(false, 'This id already exists!');
+		    }
+
+		    $create = Database::query(
+		      $this->db,
+		      "INSERT INTO SendReceiveTime(
+		        student_id
+		        ,send_date
+		        ,send_id
+		        ,create_date
+		        ,create_by
+		      )
+		      VALUES(?, ?, ?, getdate(), ?)",
+		      [
+		        $send_student_id[$i],
+		        $send_time,
+		        $send_parent_id,
+		        $username
+		      ]
+		    );
+    	}
 
 	    if ( $create ) {
 	      return $this->message->result(true, 'Create successful!');
@@ -205,78 +207,82 @@ class ReceiveAPI
 		$send_time = date('Y-m-d', strtotime($send_time));
 	    $send_chk1 = $send_time." 00:00";
 	    $send_chk2 = $send_time." 23:59";
-	    
-	    $isExists = Database::hasRows(
-	      $this->db,
-	      "SELECT *
-	      FROM SendReceiveTime
-	      WHERE receive_id = ?
-	      AND student_id = ?
-	      AND receive_date >= ?
-	      AND receive_date <= ?",
-	      [
-	        $send_parent_id,$send_student_id,$send_chk1,$send_chk2
-	      ]
-	    );
-
-	    if ( $isExists === true ) {
-	      return $this->message->result(false, 'This id already exists!');
-	    }
 
 	    $auth = new JWT;
 	    $user_data = $auth->verifyToken(); 
 	    $username = $user_data['data']['user_data']->username;
 	    $send_time = $send_time." ".$send_time_hour.":".$send_time_minute;
-
-	    $isExistsSend = Database::hasRows(
-	      $this->db,
-	      "SELECT *
-	      FROM SendReceiveTime
-	      WHERE send_id = ?
-	      AND student_id = ?
-	      AND send_date >= ?
-	      AND send_date <= ?",
-	      [
-	        $send_parent_id,$send_student_id,$send_chk1,$send_chk2
-	      ]
-	    );
-
-	    if ( $isExistsSend === true ) {
-	    	$create = Database::query(
+	    
+	    for ($i=0; $i < count($send_student_id); $i++) { 
+		    $isExists = Database::hasRows(
 		      $this->db,
-		      "UPDATE SendReceiveTime 
-		      SET receive_date = ?, receive_id = ?, update_date = getdate(), update_by = ?
-		      WHERE student_id = ? 
+		      "SELECT *
+		      FROM SendReceiveTime
+		      WHERE receive_id = ?
+		      AND student_id = ?
+		      AND receive_date >= ?
+		      AND receive_date <= ?",
+		      [
+		        $send_parent_id,$send_student_id[$i],$send_chk1,$send_chk2
+		      ]
+		    );
+
+		    if ( $isExists === true ) {
+		      return $this->message->result(false, 'This id already exists!');
+		    }
+		}
+
+		for ($i=0; $i < count($send_student_id); $i++) { 
+		    $isExistsSend = Database::hasRows(
+		      $this->db,
+		      "SELECT *
+		      FROM SendReceiveTime
+		      WHERE send_id = ?
+		      AND student_id = ?
 		      AND send_date >= ?
-	      	  AND send_date <= ?",
+		      AND send_date <= ?",
 		      [
-		      	$send_time,
-		      	$send_parent_id,
-		        $username,
-		        $send_student_id,
-		        $send_chk1,
-		        $send_chk2
+		        $send_parent_id,$send_student_id[$i],$send_chk1,$send_chk2
 		      ]
 		    );
-	    }else{
-	    	$create = Database::query(
-		      $this->db,
-		      "INSERT INTO SendReceiveTime(
-		        student_id
-		        ,receive_date
-		        ,receive_id
-		        ,create_date
-		        ,create_by
-		      )
-		      VALUES(?, ?, ?, getdate(), ?)",
-		      [
-		        $send_student_id,
-		        $send_time,
-		        $send_parent_id,
-		        $username
-		      ]
-		    );
-	    }
+
+		    if ( $isExistsSend === true ) {
+		    	$create = Database::query(
+			      $this->db,
+			      "UPDATE SendReceiveTime 
+			      SET receive_date = ?, receive_id = ?, update_date = getdate(), update_by = ?
+			      WHERE student_id = ? 
+			      AND send_date >= ?
+		      	  AND send_date <= ?",
+			      [
+			      	$send_time,
+			      	$send_parent_id,
+			        $username,
+			        $send_student_id[$i],
+			        $send_chk1,
+			        $send_chk2
+			      ]
+			    );
+		    }else{
+		    	$create = Database::query(
+			      $this->db,
+			      "INSERT INTO SendReceiveTime(
+			        student_id
+			        ,receive_date
+			        ,receive_id
+			        ,create_date
+			        ,create_by
+			      )
+			      VALUES(?, ?, ?, getdate(), ?)",
+			      [
+			        $send_student_id[$i],
+			        $send_time,
+			        $send_parent_id,
+			        $username
+			      ]
+			    );
+		    }
+		}
 
 	    if ( $create ) {
 	      return $this->message->result(true, 'Create successful!');

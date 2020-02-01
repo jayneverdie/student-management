@@ -29,6 +29,21 @@ class StudentController
     return $response->withJson($pack);
   }
 
+  public function allBy($request, $response, $args) {
+    // $params = $request->getQueryParams();
+
+    // return $response->withJson($this->student->allBy($params["id"]));
+
+    $parsedBody = $request->getParsedBody();
+    $params = $request->getQueryParams();
+    $id = $params["id"];
+
+    $data = $this->student->allBy($this->datatables->filter($parsedBody),$id);
+    $pack = $this->datatables->get($data, $parsedBody);
+
+    return $response->withJson($pack);
+  }
+
   public function getNameFix($request, $response, $args) {
     try {
       return $response->withJson($this->student->getNameFix());

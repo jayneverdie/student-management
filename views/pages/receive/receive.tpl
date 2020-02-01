@@ -1,6 +1,10 @@
 <?php $this->layout('layouts/dashboard', ['title' => 'Receive']);?>
 
 <style type="text/css">
+  input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+  }
   .ui-datepicker{z-index: 9999 !important};
 </style>
 
@@ -101,11 +105,20 @@
                 <option value="">--เลือก--</option>
               </select>
             </div>
+            <div class="col-md-4">
+              <label for="card_id">เลขบัตรประจำตัวประชาชน</label> <a href="/parent/view" target="_blank">(เพิ่มผู้ปกครอง)</a>
+              <div class="input-group">
+              <input type="text" class="form-control" name="card_id" id="card_id" maxlength="13" required>
+                  <span class="input-group-btn">
+                  <button class="btn btn-info" id="select_card" type="button">
+                  <i class="fa fa-id-card"></i> Scan
+                  </button>
+                  </span>
+              </div>
+              <br>
+            </div>
           </div>
-          <div class="form-row col-md-12">
-            <div class="modal-footer"></div>
-          </div>
-          <div class="form-row col-md-12">
+          <!-- <div class="form-row col-md-12">
             <div class="col-md-4">
               <label for="card_id">เลขบัตรประจำตัวประชาชน</label>
               <div class="input-group">
@@ -125,46 +138,50 @@
                 <a href="/parent/view" target="_blank">เพิ่มผู้ปกครอง</a>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="form-row col-md-12">
             <div class="modal-footer"></div>
           </div>
 
           <div class="form-row col-md-12">
-            <div class="row">
-              <div class="text-right col-md-4">
+            <div class="form-row">
+              <div class="form-group col-md-3">
                 <label>สถานะความสัมพันธ์</label>
                 <h3><p id="Prelation"></p></h3>
               </div>
-              <div class="text-right col-md-4">
+              <div class="form-group col-md-3">
                 <img src="/assets/images/avatar.png" id="Pimg_card" alt="" width="150">
               </div>
-              <div class="text-left col-md-4">
+              <!-- <div class="text-left col-md-4">
                 <span style="font-size: 2em;">
                   <i class="fas fa-exchange-alt"></i>
                 </span>
                 <img src="/assets/images/avatar.png" id="Simg_card" alt="" width="150">
-              </div>
+              </div> -->
             </div>
             <div class="form-row">
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label for="Pname_prefix">คำนำหน้าชื่อ</label>
                 <input type="text" name="Pname_prefix" id="Pname_prefix" class="form-control"
                 readonly>
               </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label for="Pparent_name">ชื่อ</label>
                 <input type="text" name="Pparent_name" id="Pparent_name" class="form-control"
                 readonly>
               </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label for="Pparent_lastname">นามสกุล</label>
                 <input type="text" name="Pparent_lastname" id="Pparent_lastname" class="form-control"
                 readonly>
               </div>
+              <div class="form-group col-md-3">
+                  <label for="Pphone">เบอร์โทรศัพท์</label>
+                  <input type="text" name="Pphone" id="Pphone" class="form-control" readonly>
+                </div>
             </div>
-            <div class="form-row">
+            <!-- <div class="form-row">
                 <div class="form-group col-md-4">
                   <label for="Psex_id">เพศ</label>
                    <input type="text" name="Psex_id" id="Psex_id" class="form-control"
@@ -178,7 +195,7 @@
                   <label for="Pphone">เบอร์โทรศัพท์</label>
                   <input type="text" name="Pphone" id="Pphone" class="form-control" readonly>
                 </div>
-            </div>
+            </div> -->
           </div>
 
           <div class="form-row col-md-12">
@@ -190,7 +207,24 @@
               <label>ข้อมูลนักเรียน</label>
             </div>
           </div>
+
           <div class="form-row col-md-12">
+            <table id="grid_student" class="table table-condensed table-striped" style="width:100%">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>รูปประจำตัว</th>
+                  <th>คำนำหน้า</th>
+                  <th>ชื่อ</th>
+                  <th>นาสกุล</th>
+                  <th>ชื่อเล่น</th>
+                  <th>รหัสประจำตัวนักเรียน</th>
+                  <th>ห้องเรียน</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <!-- <div class="form-row col-md-12">
             <div class="form-group col-md-4">
               <label for="Ssudent_nickname">ชื่อเล่น</label>
               <select name="Ssudent_nickname" id="Ssudent_nickname" class="form-control" required>
@@ -225,7 +259,7 @@
                 <input type="text" name="Sstudent_id" id="Sstudent_id" class="form-control" readonly>
               </div>
           </div>
-          <input type="hidden" name="send_student_id" id="send_student_id">
+          <input type="hidden" name="send_student_id" id="send_student_id"> -->
           <input type="hidden" name="send_id" id="send_id">
           <input type="hidden" name="form_type" id="form_type">
           <button type="submit" class="btn btn-primary">ยืนยัน</button>
@@ -239,7 +273,7 @@
 <?php $this->push('scripts') ?>
 <script>
   jQuery(document).ready(function($) {
-    
+
     $("#dateview").datepicker({
         dateFormat: 'dd-mm-yy',
         autoclose: true,
@@ -250,7 +284,7 @@
     $('#dateview').datepicker('setDate', today);
     var dateview = $('#dateview').val();
 
-    var grid_student_callback = function() {
+    var grid_receive_callback = function() {
       
     };
 
@@ -269,7 +303,7 @@
         url: '/api/v1/receive/all?dateview='+dateview,
         method: 'post'
       },
-      fnDrawCallback: grid_student_callback,
+      fnDrawCallback: grid_receive_callback,
       columns: [
         { data: 'student_id'},
         { data: 'student_name'},
@@ -322,7 +356,7 @@
           url: '/api/v1/receive/all?dateview='+dateview,
           method: 'post'
         },
-        fnDrawCallback: grid_student_callback,
+        fnDrawCallback: grid_receive_callback,
         columns: [
           { data: 'student_id'},
           { data: 'student_name'},
@@ -364,9 +398,6 @@
       $('#form_type').val('send');
       var path_img = "/files/images/"; 
       document.getElementById("Pimg_card").src = path_img+"avatar.png";
-
-      var path_imgS = "/files/images/"; 
-      document.getElementById("Simg_card").src = path_imgS+"avatar.png";
 
       $("#send_time").datepicker({
         dateFormat: 'dd-mm-yy',
@@ -415,6 +446,47 @@
         });
       });
 
+      // var path_imgS = "/files/images/student/"; 
+      // var card_id = "xxx";
+      // loadGrid({
+      //   el: '#grid_student',
+      //   processing: true,
+      //   serverSide: true,
+      //   deferRender: true,
+      //   searching: true,
+      //   order: [],
+      //   orderCellsTop: true,
+      //   modeSelect: "single",
+      //   lengthChange: true,
+      //   destroy: true,
+      //   ajax: {
+      //     url: '/api/v1/student/all/by?id='+card_id,
+      //     method: 'post'
+      //   },
+      //   columns: [
+      //     { data: 'id'},
+      //     { data: 'student_id'},
+      //     { data: 'name_prefix'},
+      //     { data: 'student_name'},
+      //     { data: 'student_lastname'},
+      //     { data: 'student_nickname'},
+      //     { data: 'student_id'},
+      //     { data: 'classroom'}
+      //   ],
+      //   columnDefs: [
+      //     {
+      //       render: function(data, type, row) {
+      //           return '<input type="checkbox" value="'+row.id+'"></input>';
+      //       }, targets: 0,width: "5%"
+      //     },
+      //     {
+      //       render: function(data, type, row) {
+      //           return '<img src="'+path_imgS+row.student_id+"/"+row.student_id+'" alt="" height="50">';
+      //       }, targets: 1
+      //     },
+      //   ]
+      // });
+
     });
 
     $('#btnReceive').on('click', function(){
@@ -423,9 +495,6 @@
       $('#form_type').val('receive');
       var path_img = "/files/images/"; 
       document.getElementById("Pimg_card").src = path_img+"avatar.png";
-
-      var path_imgS = "/files/images/"; 
-      document.getElementById("Simg_card").src = path_imgS+"avatar.png";
 
       $("#send_time").datepicker({
         dateFormat: 'dd-mm-yy',
@@ -474,6 +543,47 @@
         });
       });
 
+      var path_imgS = "/files/images/student/"; 
+
+      loadGrid({
+        el: '#grid_student',
+        processing: true,
+        serverSide: true,
+        deferRender: true,
+        searching: true,
+        order: [],
+        orderCellsTop: true,
+        lengthChange: false,
+        destroy: true,
+        modeSelect: "single",
+        ajax: {
+          url: '/api/v1/student/all',
+          method: 'post'
+        },
+        columns: [
+          { data: 'id'},
+          { data: 'student_id'},
+          { data: 'name_prefix'},
+          { data: 'student_name'},
+          { data: 'student_lastname'},
+          { data: 'student_nickname'},
+          { data: 'student_id'},
+          { data: 'classroom'}
+        ],
+        columnDefs: [
+          {
+            render: function(data, type, row) {
+                return '<input type="checkbox" value="'+row.id+'"></input>';
+            }, targets: 0,width: "5%"
+          },
+          {
+            render: function(data, type, row) {
+                return '<img src="'+path_imgS+row.student_id+"/"+row.student_id+'" alt="" height="50">';
+            }, targets: 1
+          },
+        ]
+      });
+
     });
 
     $('#select_card').on('click', function(){
@@ -518,8 +628,6 @@
               var path_img = "/files/images/parent/"+data[0].card_id+"/"; 
               document.getElementById("Pimg_card").src = path_img+data[0].card_id+".jpg";
 
-              var path_imgS = "/files/images/student/"+data[0].Sstudent_id+"/"; 
-              document.getElementById("Simg_card").src = path_imgS+data[0].Sstudent_id+".jpg";
             }
             $('#select_card').html('<i class="fa fa-id-card"></i> Scan');
             $('#select_card').attr('disabled', false);
@@ -568,8 +676,6 @@
                     var path_img = "/files/images/parent/"+data[0].card_id+"/"; 
                     document.getElementById("Pimg_card").src = path_img+data[0].card_id+".jpg";
 
-                    var path_imgS = "/files/images/student/"+data[0].Sstudent_id+"/"; 
-                    document.getElementById("Simg_card").src = path_imgS+data[0].Sstudent_id+".jpg";
                   }
                   $('#select_card').html('<i class="fa fa-id-card"></i> Scan');
                   $('#select_card').attr('disabled', false);
@@ -589,37 +695,85 @@
           
         }
 
+        var card_id = '1539900304555';
+        loadGrid({
+          el: '#grid_student',
+          processing: true,
+          serverSide: true,
+          deferRender: true,
+          searching: true,
+          order: [],
+          orderCellsTop: true,
+          modeSelect: "single",
+          lengthChange: false,
+          destroy: true,
+          ajax: {
+            url: '/api/v1/student/all',
+            method: 'post'
+          },
+          columns: [
+            { data: 'id'},
+            { data: 'student_id'},
+            { data: 'name_prefix'},
+            { data: 'student_name'},
+            { data: 'student_lastname'},
+            { data: 'student_nickname'},
+            { data: 'student_id'},
+            { data: 'classroom'}
+          ],
+          columnDefs: [
+            {
+              render: function(data, type, row) {
+                  return '<input type="checkbox" value="'+row.id+'"></input>';
+              }, targets: 0,width: "5%"
+            },
+            {
+              render: function(data, type, row) {
+                  return '<img src="'+path_imgS+row.student_id+"/"+row.student_id+'" alt="" height="50">';
+              }, targets: 1
+            },
+          ]
+        });
     });
 
-    $('#Ssudent_nickname').on('change',function(){
+    // $('#Ssudent_nickname').on('change',function(){
 
-      var id = $('#Ssudent_nickname').val();
-      var card_id = $('#card_id').val();
-      call_ajax("post", "/api/v1/receive/load/student/by/id?id="+id+"&ran="+Math.random()*99999).done(function(data) {
-        $.each(data, function(i, v) {
-          $('#Sstudent_name').val(v.student_name);
-          $('#Sstudent_lastname').val(v.student_lastname);
-          $('#Sstudent_id').val(v.student_id);
-          $('#Sbirthday').val(v.birthday);
-          $('#Sname_prefix').val(v.name_prefix);
-          $('#Ssex_id').val(v.sex_description);
-          $('#send_student_id').val(v.id);
+    //   var id = $('#Ssudent_nickname').val();
+    //   var card_id = $('#card_id').val();
+    //   call_ajax("post", "/api/v1/receive/load/student/by/id?id="+id+"&ran="+Math.random()*99999).done(function(data) {
+    //     $.each(data, function(i, v) {
+    //       $('#Sstudent_name').val(v.student_name);
+    //       $('#Sstudent_lastname').val(v.student_lastname);
+    //       $('#Sstudent_id').val(v.student_id);
+    //       $('#Sbirthday').val(v.birthday);
+    //       $('#Sname_prefix').val(v.name_prefix);
+    //       $('#Ssex_id').val(v.sex_description);
+    //       $('#send_student_id').val(v.id);
 
-          var path_imgS = "/files/images/student/"+v.student_id+"/"; 
-          document.getElementById("Simg_card").src = path_imgS+v.student_id+".jpg";
-        });
-      });
-      call_ajax("post", "/api/v1/receive/load/relation/by/student?student_id="+id+"&parent_id="+card_id).done(function(data) {
-        $.each(data, function(i, v) {
-          $('#Prelation').text(data[0].relation_description);
-        });
-      });
+    //       var path_imgS = "/files/images/student/"+v.student_id+"/"; 
+    //       document.getElementById("Simg_card").src = path_imgS+v.student_id+".jpg";
+    //     });
+    //   });
+    //   call_ajax("post", "/api/v1/receive/load/relation/by/student?student_id="+id+"&parent_id="+card_id).done(function(data) {
+    //     $.each(data, function(i, v) {
+    //       $('#Prelation').text(data[0].relation_description);
+    //     });
+    //   });
 
-    });
+    // });
 
   });
   
     function submit_send() {
+      var vals = [];
+      $(':checkbox:checked').each(function(i,v){
+        vals[i] = $(this).val();
+      });
+
+      if (vals.length===0) {
+        alert("Please select student!");
+        return  false;
+      }
 
       $.ajax({
           url: '/api/v1/receive/send',
@@ -627,7 +781,7 @@
           cache : false,
           dataType : 'json',
           data : {
-            send_student_id : $('#send_student_id').val(),
+            send_student_id : vals,
             send_parent_id : $('#send_id').val(),
             send_time : $('#send_time').val(),
             send_time_hour : $('#send_time_hour').val(),

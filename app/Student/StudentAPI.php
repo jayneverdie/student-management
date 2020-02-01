@@ -53,6 +53,50 @@ class StudentAPI
     }
   }
 
+  public function allBy($filter,$id) {
+    try {
+      return Database::rows(
+        $this->db,
+        "SELECT 
+          P.id
+          ,P.name_prefix_id
+          ,N.name_prefix
+          ,P.student_name
+          ,P.student_lastname
+          ,P.student_id
+          ,P.student_nickname
+          ,P.sex_id
+          ,S.sex_description
+          ,P.card_id
+          ,P.address_first
+          ,P.address_second
+          ,P.phone
+          ,P.birthday
+          ,P.attendance_date
+          ,P.classroom_id
+          ,C.classroom
+          ,P.status
+          ,WB.status_name
+          ,P.create_date
+          ,P.create_by
+          ,P.update_date
+          ,P.update_by
+          ,MP.parent_id
+          ,PT.card_id
+        FROM StudentTrans P
+        LEFT JOIN NamePrefix N ON P.name_prefix_id = N.id
+        LEFT JOIN Sex S ON P.sex_id = S.sex_id 
+        LEFT JOIN ClassRoom C ON P.classroom_id = C.id
+        LEFT JOIN web_status WB ON P.status = WB.id
+        LEFT JOIN MapParentStudent MP ON P.id = MP.student_id
+        LEFT JOIN ParentTrans PT ON MP.parent_id = PT.id 
+        WHERE PT.card_id = ?",[$id]
+      ); 
+    } catch (Exception $e) {
+      throw new Exception($e->getMessage());
+    }
+  }
+
   public function getNameFix() {
     try {
       return Database::rows(
