@@ -212,7 +212,7 @@
             <table id="grid_student" class="table table-condensed table-striped" style="width:100%">
               <thead>
                 <tr>
-                  <th></th>
+                  <th>เลือก</th>
                   <th>รูปประจำตัว</th>
                   <th>คำนำหน้า</th>
                   <th>ชื่อ</th>
@@ -446,47 +446,47 @@
         });
       });
 
-      // var path_imgS = "/files/images/student/"; 
-      // var card_id = "xxx";
-      // loadGrid({
-      //   el: '#grid_student',
-      //   processing: true,
-      //   serverSide: true,
-      //   deferRender: true,
-      //   searching: true,
-      //   order: [],
-      //   orderCellsTop: true,
-      //   modeSelect: "single",
-      //   lengthChange: true,
-      //   destroy: true,
-      //   ajax: {
-      //     url: '/api/v1/student/all/by?id='+card_id,
-      //     method: 'post'
-      //   },
-      //   columns: [
-      //     { data: 'id'},
-      //     { data: 'student_id'},
-      //     { data: 'name_prefix'},
-      //     { data: 'student_name'},
-      //     { data: 'student_lastname'},
-      //     { data: 'student_nickname'},
-      //     { data: 'student_id'},
-      //     { data: 'classroom'}
-      //   ],
-      //   columnDefs: [
-      //     {
-      //       render: function(data, type, row) {
-      //           return '<input type="checkbox" value="'+row.id+'"></input>';
-      //       }, targets: 0,width: "5%"
-      //     },
-      //     {
-      //       render: function(data, type, row) {
-      //           return '<img src="'+path_imgS+row.student_id+"/"+row.student_id+'" alt="" height="50">';
-      //       }, targets: 1
-      //     },
-      //   ]
-      // });
+      var path_imgS = "/files/images/student/"; 
 
+      var card_id = 'xxx';
+      loadGrid({
+        el: '#grid_student',
+        processing: true,
+        serverSide: true,
+        deferRender: true,
+        searching: true,
+        order: [],
+        orderCellsTop: true,
+        modeSelect: "single",
+        lengthChange: false,
+        destroy: true,
+        ajax: {
+          url: '/api/v1/student/all/by?id='+card_id,
+          method: 'post'
+        },
+        columns: [
+          { data: 'id'},
+          { data: 'student_id'},
+          { data: 'name_prefix'},
+          { data: 'student_name'},
+          { data: 'student_lastname'},
+          { data: 'student_nickname'},
+          { data: 'student_id'},
+          { data: 'classroom'}
+        ],
+        columnDefs: [
+          {
+            render: function(data, type, row) {
+                return '<input type="checkbox" value="'+row.id+'"></input>';
+            }, targets: 0,width: "5%"
+          },
+          {
+            render: function(data, type, row) {
+                return '<img src="'+path_imgS+row.student_id+"/"+row.student_id+'" alt="" height="50">';
+            }, targets: 1
+          },
+        ]
+      });
     });
 
     $('#btnReceive').on('click', function(){
@@ -545,6 +545,7 @@
 
       var path_imgS = "/files/images/student/"; 
 
+      var card_id = 'xxx';
       loadGrid({
         el: '#grid_student',
         processing: true,
@@ -553,11 +554,11 @@
         searching: true,
         order: [],
         orderCellsTop: true,
+        modeSelect: "single",
         lengthChange: false,
         destroy: true,
-        modeSelect: "single",
         ajax: {
-          url: '/api/v1/student/all',
+          url: '/api/v1/student/all/by?id='+card_id,
           method: 'post'
         },
         columns: [
@@ -694,8 +695,8 @@
           });
           
         }
-
-        var card_id = '1539900304555';
+        var path_imgS = "/files/images/student/"; 
+        var card_id = $('#card_id').val();
         loadGrid({
           el: '#grid_student',
           processing: true,
@@ -708,7 +709,7 @@
           lengthChange: false,
           destroy: true,
           ajax: {
-            url: '/api/v1/student/all',
+            url: '/api/v1/student/all/by?id='+card_id,
             method: 'post'
           },
           columns: [
@@ -735,32 +736,6 @@
           ]
         });
     });
-
-    // $('#Ssudent_nickname').on('change',function(){
-
-    //   var id = $('#Ssudent_nickname').val();
-    //   var card_id = $('#card_id').val();
-    //   call_ajax("post", "/api/v1/receive/load/student/by/id?id="+id+"&ran="+Math.random()*99999).done(function(data) {
-    //     $.each(data, function(i, v) {
-    //       $('#Sstudent_name').val(v.student_name);
-    //       $('#Sstudent_lastname').val(v.student_lastname);
-    //       $('#Sstudent_id').val(v.student_id);
-    //       $('#Sbirthday').val(v.birthday);
-    //       $('#Sname_prefix').val(v.name_prefix);
-    //       $('#Ssex_id').val(v.sex_description);
-    //       $('#send_student_id').val(v.id);
-
-    //       var path_imgS = "/files/images/student/"+v.student_id+"/"; 
-    //       document.getElementById("Simg_card").src = path_imgS+v.student_id+".jpg";
-    //     });
-    //   });
-    //   call_ajax("post", "/api/v1/receive/load/relation/by/student?student_id="+id+"&parent_id="+card_id).done(function(data) {
-    //     $.each(data, function(i, v) {
-    //       $('#Prelation').text(data[0].relation_description);
-    //     });
-    //   });
-
-    // });
 
   });
   

@@ -53,7 +53,7 @@ class StudentAPI
     }
   }
 
-  public function allBy($filter,$id) {
+  public function allBy($id) {
     try {
       return Database::rows(
         $this->db,

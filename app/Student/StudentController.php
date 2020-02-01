@@ -30,15 +30,11 @@ class StudentController
   }
 
   public function allBy($request, $response, $args) {
-    // $params = $request->getQueryParams();
-
-    // return $response->withJson($this->student->allBy($params["id"]));
-
     $parsedBody = $request->getParsedBody();
     $params = $request->getQueryParams();
     $id = $params["id"];
 
-    $data = $this->student->allBy($this->datatables->filter($parsedBody),$id);
+    $data = $this->student->allBy($params["id"]);
     $pack = $this->datatables->get($data, $parsedBody);
 
     return $response->withJson($pack);
