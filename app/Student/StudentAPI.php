@@ -350,6 +350,12 @@ class StudentAPI
           "UPDATE StudentTrans SET classroom_id = ?
           WHERE classroom_id = ?",[$value['promote_to'],$value['promote_from']]
         );
+
+        $updateTemp = Database::query(
+          $this->db,
+          "UPDATE Promote SET status = ?
+          WHERE promote_to = ? AND promote_from = ?",[0,$value['promote_to'],$value['promote_from']]
+        );
       }
 
       if ( $update ) {
