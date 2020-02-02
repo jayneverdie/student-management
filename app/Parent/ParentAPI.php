@@ -19,6 +19,7 @@ class ParentAPI
         $this->db,
         "SELECT 
           P.id
+          ,ROW_NUMBER() OVER(ORDER BY P.id) AS rowid
           ,P.relation_id
           ,P.name_prefix_id
           ,N.name_prefix
@@ -250,7 +251,7 @@ class ParentAPI
     try {
       return Database::rows(
         $this->db,
-        "SELECT M.*,N.name_prefix,S.student_name,S.student_lastname,C.classroom,R.relation_description
+        "SELECT ROW_NUMBER() OVER(ORDER BY M.id) AS rowid,M.*,N.name_prefix,S.student_name,S.student_lastname,C.classroom,R.relation_description
         FROM MapParentStudent M
         LEFT JOIN StudentTrans S ON M.student_id = S.id
         LEFT JOIN NamePrefix N ON S.name_prefix_id = N.id

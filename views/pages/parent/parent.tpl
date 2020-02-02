@@ -74,13 +74,13 @@
                       <img src="/assets/images/avatar.png" id="img_card" alt="" width="150">
                     </div>
                     <br><br><br><br>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="card_id">เลขบัตรประจำตัวประชาชน</label>
                         <div class="input-group">
-                        <input type="text" class="form-control" name="card_id" id="card_id" maxlength="13" required>
+                        <input type="number" class="form-control" name="card_id" id="card_id" maxlength="13" autocomplete="off" required>
                             <span class="input-group-btn">
                             <button class="btn btn-info" id="select_card" type="button">
-                            <i class="fa fa-id-card"></i> Scan
+                            <i class="fa fa-id-card"></i> Scan ดึงข้อมูลจากบัตร
                             </button>
                             </span>
                         </div>
@@ -440,8 +440,14 @@
                 $('#address_first').val(address);
             }
             console.log(data);
-            $('#select_card').html('<i class="fa fa-id-card"> Scan</i>');
+            $('#select_card').html('<i class="fa fa-id-card"></i> Scan ดึงข้อมูลจากบัตร');
             $('#select_card').attr('disabled', false);
+        }).fail(function(data) {
+          setTimeout(function(){ 
+            alert("Please check scanner!");
+            $('#select_card').html('<i class="fa fa-id-card"></i> Scan ดึงข้อมูลจากบัตร');
+            $('#select_card').attr('disabled', false);
+          }, 3000);
         });
     });
 
@@ -516,7 +522,7 @@
       },
       fnDrawCallback: grid_parent_callback,
       columns: [
-        { data: 'id'},
+        { data: 'rowid'},
         { data: 'name_prefix'},
         { data: 'parent_name'},
         { data: 'parent_lastname'},
@@ -554,7 +560,7 @@
     $('#create').on('click', function () {
         $('#modal_create').modal({backdrop: 'static'});
         $('#form_create').trigger('reset');
-        $('#select_card').html('<i class="fa fa-id-card"> Scan</i>');
+        $('#select_card').html('<i class="fa fa-id-card"></i> Scan ดึงข้อมูลจากบัตร');
         $('#select_card').attr('disabled', false);
 
         $("#birthday").datepicker({
@@ -734,7 +740,7 @@
           },
           fnDrawCallback: grid_map_callback,
           columns: [
-            { data: 'id'},
+            { data: 'rowid'},
             { data: 'relation_description'},
             { data: 'name_prefix'},
             { data: 'student_name'},
@@ -842,7 +848,18 @@
 
     function submit_create() {
         var form_data = new FormData($("#form_create")[0]);
+        var today = new Date();
+        var dn = dayjs(today).format('YYYY-MM-DD');
 
+        var db1 = $('#birthday').val().split("-");
+        var db = db1[2]+'-'+db1[1]+'-'+db1[0];  
+        
+
+        if(Date.parse(dn) < Date.parse(db)){
+          alert("วันเกิดไม่ถูกต้อง");
+          $('#birthday').focus();
+          return false;
+        }
         $.ajax({
             url: '/api/v1/parent/create',
             type : 'post',

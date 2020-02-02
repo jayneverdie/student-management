@@ -72,7 +72,7 @@
                     <br><br><br><br>
                     <div class="form-group col-md-4">
                         <label for="card_id">รหัสประจำตัวนักเรียน</label>
-                        <input type="text" class="form-control" name="card_id" id="card_id" required>
+                        <input type="number" class="form-control" name="card_id" id="card_id" autocomplete="off" required>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="nickname">ชื่อเล่น</label>

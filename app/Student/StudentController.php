@@ -20,6 +20,10 @@ class StudentController
     return $this->view->render('pages/student/student');
   }
 
+  public function ViewPromote($request, $response, $args) {
+    return $this->view->render('pages/student/promote');
+  }
+
   public function all($request, $response, $args) {
     $parsedBody = $request->getParsedBody();
 
@@ -29,12 +33,37 @@ class StudentController
     return $response->withJson($pack);
   }
 
+  public function allPromote($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+    $params = $request->getQueryParams();
+    $c_af = $params["c_af"];
+    $c_bf = $params["c_bf"];
+
+    $data = $this->student->allPromote($c_af,$c_bf);
+    $pack = $this->datatables->get($data, $parsedBody);
+
+    return $response->withJson($pack);
+  }
+
+  public function allPromoteTemp($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+    $params = $request->getQueryParams();
+
+    $data = $this->student->allPromoteTemp();
+    $pack = $this->datatables->get($data, $parsedBody);
+
+    return $response->withJson($pack);
+  }
+
   public function allBy($request, $response, $args) {
     $parsedBody = $request->getParsedBody();
     $params = $request->getQueryParams();
     $id = $params["id"];
+    $date = $params["date"];
+    $form_type = $params["form_type"];
+    $date = date('Y-m-d', strtotime($date));
 
-    $data = $this->student->allBy($params["id"]);
+    $data = $this->student->allBy($params["id"],$date,$form_type);
     $pack = $this->datatables->get($data, $parsedBody);
 
     return $response->withJson($pack);
@@ -116,6 +145,34 @@ class StudentController
         $parsedBody["cardid_mother"]
       );
 
+      return $response->withJson($result);
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
+  public function move($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+
+      $result = $this->student->move(
+        $parsedBody["student_id"],
+        $parsedBody["classroom_before"],
+        $parsedBody["classroom_after"]
+      );
+      
+      return $response->withJson($result);
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
+  public function moveConfirm($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+
+      $result = $this->student->moveConfirm();
+      
       return $response->withJson($result);
     } catch (\Exception $e) {
       return [];

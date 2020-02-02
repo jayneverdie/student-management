@@ -83,7 +83,7 @@
         <form id="form_send" onsubmit="return submit_send()"> 
           <div class="form-row col-md-12">
             <div class="form-group col-md-3">
-                <label for="send_time">วันที่ส่ง</label>
+                <label for="send_time">วันที่</label>
                 <div class="input-group">
                 <input type="text" class="form-control" name="send_time" id="send_time" required autocomplete="off">
                     <span class="input-group-btn">
@@ -108,7 +108,7 @@
             <div class="col-md-4">
               <label for="card_id">เลขบัตรประจำตัวประชาชน</label> <a href="/parent/view" target="_blank">(เพิ่มผู้ปกครอง)</a>
               <div class="input-group">
-              <input type="text" class="form-control" name="card_id" id="card_id" maxlength="13" required>
+              <input type="number" class="form-control" name="card_id" id="card_id" maxlength="13" autocomplete="off" required>
                   <span class="input-group-btn">
                   <button class="btn btn-info" id="select_card" type="button">
                   <i class="fa fa-id-card"></i> Scan
@@ -118,27 +118,6 @@
               <br>
             </div>
           </div>
-          <!-- <div class="form-row col-md-12">
-            <div class="col-md-4">
-              <label for="card_id">เลขบัตรประจำตัวประชาชน</label>
-              <div class="input-group">
-              <input type="text" class="form-control" name="card_id" id="card_id" maxlength="13" required>
-                  <span class="input-group-btn">
-                  <button class="btn btn-info" id="select_card" type="button">
-                  <i class="fa fa-id-card"></i> Scan
-                  </button>
-                  </span>
-              </div>
-              <br>
-            </div>
-            <div class="col-md-4">
-            </div>
-            <div class="col-md-4">
-              <div class="input-group">
-                <a href="/parent/view" target="_blank">เพิ่มผู้ปกครอง</a>
-              </div>
-            </div>
-          </div> -->
 
           <div class="form-row col-md-12">
             <div class="modal-footer"></div>
@@ -153,49 +132,18 @@
               <div class="form-group col-md-3">
                 <img src="/assets/images/avatar.png" id="Pimg_card" alt="" width="150">
               </div>
-              <!-- <div class="text-left col-md-4">
-                <span style="font-size: 2em;">
-                  <i class="fas fa-exchange-alt"></i>
-                </span>
-                <img src="/assets/images/avatar.png" id="Simg_card" alt="" width="150">
-              </div> -->
             </div>
             <div class="form-row">
-              <div class="form-group col-md-3">
-                <label for="Pname_prefix">คำนำหน้าชื่อ</label>
-                <input type="text" name="Pname_prefix" id="Pname_prefix" class="form-control"
+              <div class="form-group col-md-6">
+                <label for="Pfull_name">ชื่อ-สกุล</label>
+                <input type="text" name="Pfull_name" id="Pfull_name" class="form-control"
                 readonly>
               </div>
-              <div class="form-group col-md-3">
-                <label for="Pparent_name">ชื่อ</label>
-                <input type="text" name="Pparent_name" id="Pparent_name" class="form-control"
-                readonly>
+              <div class="form-group col-md-6">
+                <label for="Pphone">เบอร์โทรศัพท์</label>
+                <input type="text" name="Pphone" id="Pphone" class="form-control" readonly>
               </div>
-              <div class="form-group col-md-3">
-                <label for="Pparent_lastname">นามสกุล</label>
-                <input type="text" name="Pparent_lastname" id="Pparent_lastname" class="form-control"
-                readonly>
-              </div>
-              <div class="form-group col-md-3">
-                  <label for="Pphone">เบอร์โทรศัพท์</label>
-                  <input type="text" name="Pphone" id="Pphone" class="form-control" readonly>
-                </div>
             </div>
-            <!-- <div class="form-row">
-                <div class="form-group col-md-4">
-                  <label for="Psex_id">เพศ</label>
-                   <input type="text" name="Psex_id" id="Psex_id" class="form-control"
-                readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="Pbirthday">วันเกิด</label>
-                  <input type="text" name="Pbirthday" id="Pbirthday" class="form-control" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="Pphone">เบอร์โทรศัพท์</label>
-                  <input type="text" name="Pphone" id="Pphone" class="form-control" readonly>
-                </div>
-            </div> -->
           </div>
 
           <div class="form-row col-md-12">
@@ -214,9 +162,8 @@
                 <tr>
                   <th>เลือก</th>
                   <th>รูปประจำตัว</th>
-                  <th>คำนำหน้า</th>
-                  <th>ชื่อ</th>
-                  <th>นาสกุล</th>
+                  <th>สถานะความสัมพันธ์</th>
+                  <th>ชื่อ-นามสกุล</th>
                   <th>ชื่อเล่น</th>
                   <th>รหัสประจำตัวนักเรียน</th>
                   <th>ห้องเรียน</th>
@@ -224,42 +171,6 @@
               </thead>
             </table>
           </div>
-          <!-- <div class="form-row col-md-12">
-            <div class="form-group col-md-4">
-              <label for="Ssudent_nickname">ชื่อเล่น</label>
-              <select name="Ssudent_nickname" id="Ssudent_nickname" class="form-control" required>
-              </select>
-            </div>
-          </div>
-          <div class="form-row col-md-12">
-              <div class="form-group col-md-4">
-                <label for="Sname_prefix">คำนำหน้าชื่อ</label>
-                <input type="text" name="Sname_prefix" id="Sname_prefix" class="form-control" readonly>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="Sstudent_name">ชื่อ</label>
-                <input type="text" name="Sstudent_name" id="Sstudent_name" class="form-control" readonly>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="Sstudent_lastname">นามสกุล</label>
-                <input type="text" name="Sstudent_lastname" id="Sstudent_lastname" class="form-control" readonly>
-              </div>
-          </div>
-          <div class="form-row col-md-12">
-              <div class="form-group col-md-4">
-                <label for="Ssex_id">เพศ</label>
-                <input type="text" name="Ssex_id" id="Ssex_id" class="form-control" readonly>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="Sbirthday">วันเกิด</label>
-                <input type="text" name="Sbirthday" id="Sbirthday" class="form-control" readonly>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="Sstudent_id">รหัสนักเรียน</label>
-                <input type="text" name="Sstudent_id" id="Sstudent_id" class="form-control" readonly>
-              </div>
-          </div>
-          <input type="hidden" name="send_student_id" id="send_student_id"> -->
           <input type="hidden" name="send_id" id="send_id">
           <input type="hidden" name="form_type" id="form_type">
           <button type="submit" class="btn btn-primary">ยืนยัน</button>
@@ -310,9 +221,9 @@
         { data: 'student_lastname'},
         { data: 'student_nickname'},
         { data: 'classroom'},
-        { data: 'send_date'},
+        { data: 'send_date' ,width:'12%'},
         { data: 'parent_fullname_send'},
-        { data: 'receive_date'},
+        { data: 'receive_date',width:'12%'},
         { data: 'parent_fullname_receive'}
       ],
       columnDefs: [
@@ -363,9 +274,9 @@
           { data: 'student_lastname'},
           { data: 'student_nickname'},
           { data: 'classroom'},
-          { data: 'send_date'},
+          { data: 'send_date' ,width:'12%'},
           { data: 'parent_fullname_send'},
-          { data: 'receive_date'},
+          { data: 'receive_date',width:'12%'},
           { data: 'parent_fullname_receive'}
         ],
         columnDefs: [
@@ -394,7 +305,7 @@
 
     $('#btnSend').on('click', function(){
       $('#form_send').trigger('reset');
-      $('#Ssudent_nickname').html('');
+      $('#Prelation').html('');
       $('#form_type').val('send');
       var path_img = "/files/images/"; 
       document.getElementById("Pimg_card").src = path_img+"avatar.png";
@@ -447,7 +358,8 @@
       });
 
       var path_imgS = "/files/images/student/"; 
-
+      var send_time = $('#send_time').val();
+      var form_type = "send";
       var card_id = 'xxx';
       loadGrid({
         el: '#grid_student',
@@ -461,15 +373,14 @@
         lengthChange: false,
         destroy: true,
         ajax: {
-          url: '/api/v1/student/all/by?id='+card_id,
+          url: '/api/v1/student/all/by?id='+card_id+'&date='+send_time+'&form_type='+form_type,
           method: 'post'
         },
         columns: [
           { data: 'id'},
           { data: 'student_id'},
-          { data: 'name_prefix'},
-          { data: 'student_name'},
-          { data: 'student_lastname'},
+          { data: 'relation_description'},
+          { data: 'FullName'},
           { data: 'student_nickname'},
           { data: 'student_id'},
           { data: 'classroom'}
@@ -491,7 +402,7 @@
 
     $('#btnReceive').on('click', function(){
       $('#form_send').trigger('reset');
-      $('#Ssudent_nickname').html('');
+      $('#Prelation').html('');
       $('#form_type').val('receive');
       var path_img = "/files/images/"; 
       document.getElementById("Pimg_card").src = path_img+"avatar.png";
@@ -544,7 +455,8 @@
       });
 
       var path_imgS = "/files/images/student/"; 
-
+      var send_time = $('#send_time').val();
+      var form_type = "receive";
       var card_id = 'xxx';
       loadGrid({
         el: '#grid_student',
@@ -558,15 +470,14 @@
         lengthChange: false,
         destroy: true,
         ajax: {
-          url: '/api/v1/student/all/by?id='+card_id,
+          url: '/api/v1/student/all/by?id='+card_id+'&date='+send_time+'&form_type='+form_type,
           method: 'post'
         },
         columns: [
           { data: 'id'},
           { data: 'student_id'},
-          { data: 'name_prefix'},
-          { data: 'student_name'},
-          { data: 'student_lastname'},
+          { data: 'relation_description'},
+          { data: 'FullName'},
           { data: 'student_nickname'},
           { data: 'student_id'},
           { data: 'classroom'}
@@ -600,6 +511,7 @@
               alert(data.message);
             }else{
               $('#Prelation').text(data[0].relation_description);
+              $('#Pfull_name').val(data[0].Pname_prefix+data[0].parent_name+' '+data[0].parent_lastname);
               $('#Pname_prefix').val(data[0].Pname_prefix);
               $('#Pparent_name').val(data[0].parent_name);
               $('#Pparent_lastname').val(data[0].parent_lastname);
@@ -651,6 +563,7 @@
                     $('#Pname_prefix').val(data[0].Pname_prefix);
                     $('#Pparent_name').val(data[0].parent_name);
                     $('#Pparent_lastname').val(data[0].parent_lastname);
+                    $('#Pfull_name').val(data[0].Pname_prefix+data[0].parent_name+' '+data[0].parent_lastname);
                     $('#Psex_id').val(data[0].Psex_id);
                     $('#Pphone').val(data[0].phone);
                     $('#Pbirthday').val(data[0].Pbirthday);
@@ -695,7 +608,10 @@
           });
           
         }
+
         var path_imgS = "/files/images/student/"; 
+        var send_time = $('#send_time').val();
+        var form_type = $('#form_type').val();
         var card_id = $('#card_id').val();
         loadGrid({
           el: '#grid_student',
@@ -709,15 +625,14 @@
           lengthChange: false,
           destroy: true,
           ajax: {
-            url: '/api/v1/student/all/by?id='+card_id,
+            url: '/api/v1/student/all/by?id='+card_id+'&date='+send_time+'&form_type='+form_type,
             method: 'post'
           },
           columns: [
             { data: 'id'},
             { data: 'student_id'},
-            { data: 'name_prefix'},
-            { data: 'student_name'},
-            { data: 'student_lastname'},
+            { data: 'relation_description'},
+            { data: 'FullName' ,width:'25%'},
             { data: 'student_nickname'},
             { data: 'student_id'},
             { data: 'classroom'}
