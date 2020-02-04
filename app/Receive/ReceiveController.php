@@ -114,5 +114,21 @@ class ReceiveController
       return [];
     }
   }
+
+  public function Delete($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+      
+      $result = $this->receive->Delete(
+        $parsedBody["student_id"],
+        $parsedBody["dateview"]
+      );
+      
+      return $response->withJson($result);
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
 }
 

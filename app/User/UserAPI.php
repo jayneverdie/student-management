@@ -343,4 +343,20 @@ class UserAPI
     }
   }
 
+  public function CountUserAll() {
+    try {
+      return Database::rows(
+        $this->db,
+        "SELECT 
+          COUNT(*) AS TotalUser
+          ,(SELECT COUNT(*) FROM StudentTrans) AS TotalStudent
+          ,(SELECT COUNT(*) FROM ParentTrans) AS TotalParent
+          ,(SELECT COUNT(*) FROM TeacherTrans) AS TotalTeacher
+        FROM web_user"
+      );
+    } catch (\Exception $e) {
+      throw new Exception($e->getMessage());
+    }
+  }
+
 }

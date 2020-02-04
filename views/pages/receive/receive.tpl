@@ -32,6 +32,7 @@
           <div class="form-group">
           <button class="btn btn-success" id="btnSend"><i class="fas fa-angle-double-down"></i> ส่ง</button>
           <button class="btn btn-warning" id="btnReceive"><i class="fas fa-angle-double-up"></i> รับ</button>
+          <button class="btn btn-danger" id="btnDelete"><i class="fas fa-trash-alt"></i> ลบ</button>
           </div>
         </div>
         <br><br><br>
@@ -196,7 +197,7 @@
     var dateview = $('#dateview').val();
 
     var grid_receive_callback = function() {
-      
+          
     };
 
     loadGrid({
@@ -230,18 +231,18 @@
         {
           render: function(data, type, row) {
             if (row.send_date!==null) {
-              return '<p class="bg-success" data-pk="'+row.send_date+'">'+data+'</p>';
+              return '<p style="background-color:#5fc95c;" data-pk="'+row.send_date+'"><b>'+data+'</b></p>';
             }else{
-              return '<p class="bg-danger">-</p>';
+              return '<p style="background-color:#f5554a;"><b> - </b></p>';
             }
           }, targets: 5
-        },
-        {
+          },
+          {
           render: function(data, type, row) {
             if (row.receive_date!==null) {
-              return '<p class="bg-warning" data-pk="'+row.receive_date+'">'+data+'</p>';
+              return '<p style="background-color:#ffb344;" data-pk="'+row.receive_date+'"><b>'+data+'</b></p>';
             }else{
-              return '<p class="bg-danger">-</p>';
+              return '<p style="background-color:#f5554a;"><b> - </b></p>';
             }
           }, targets: 7
         }
@@ -283,21 +284,21 @@
           {
             render: function(data, type, row) {
               if (row.send_date!==null) {
-                return '<p class="bg-success" data-pk="'+row.send_date+'">'+data+'</p>';
+                return '<p style="background-color:#5fc95c;" data-pk="'+row.send_date+'"><b>'+data+'</b></p>';
               }else{
-                return '<p class="bg-danger">-</p>';
+                return '<p style="background-color:#f5554a;"><b> - </b></p>';
               }
             }, targets: 5
-          },
-          {
-          render: function(data, type, row) {
-            if (row.receive_date!==null) {
-              return '<p class="bg-warning" data-pk="'+row.receive_date+'">'+data+'</p>';
-            }else{
-              return '<p class="bg-danger">-</p>';
-            }
-          }, targets: 7
-        }
+            },
+            {
+            render: function(data, type, row) {
+              if (row.receive_date!==null) {
+                return '<p style="background-color:#ffb344;" data-pk="'+row.receive_date+'"><b>'+data+'</b></p>';
+              }else{
+                return '<p style="background-color:#f5554a;"><b> - </b></p>';
+              }
+            }, targets: 7
+          }
         ]
       });
 
@@ -650,6 +651,33 @@
             },
           ]
         });
+    });
+    
+    $('#btnDelete').on('click', function () {
+      var rowdata = rowSelected('#grid_receive');
+      if (rowdata.length !== 0) {
+        if (confirm("Are You Sure!")) {
+          $.ajax({
+              url: '/api/v1/receive/delete',
+              type : 'post',
+              cache : false,
+              dataType : 'json',
+              data : {
+                student_id : rowdata[0].id,
+                dateview : $('#dateview').val()
+              }
+          })
+          .done(function(data) {
+            if ( data.result === true ) {
+              reloadGrid('#grid_receive');
+            } else {
+              alert(data.message);
+            }
+          });
+        }
+      } else {
+        alert('Please select row!');
+      }
     });
 
   });

@@ -25,4 +25,6 @@ $app->group('/api/v1/user', function() use ($auth, $app) {
   $app->get('/AllLogin', 'App\User\UserController:AllLogin')->add($auth);
   $app->get('/CountUser', 'App\User\UserController:CountUser')->add($auth);
   $app->post('/getEmployee', 'App\User\UserController:getEmployee')->add($auth);
+
+  $app->post('/CountUserAll', 'App\User\UserController:CountUserAll')->add($auth);
 });

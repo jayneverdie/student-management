@@ -77,7 +77,7 @@
                     <div class="col-md-6">
                         <label for="card_id">เลขบัตรประจำตัวประชาชน</label>
                         <div class="input-group">
-                        <input type="number" class="form-control" name="card_id" id="card_id" maxlength="13" autocomplete="off" required>
+                        <input type="text" class="form-control" name="card_id" id="card_id" maxlength="13" autocomplete="off" required>
                             <span class="input-group-btn">
                             <button class="btn btn-info" id="select_card" type="button">
                             <i class="fa fa-id-card"></i> Scan ดึงข้อมูลจากบัตร

@@ -358,4 +358,53 @@ class ReceiveAPI
 	    }
 	}
 
+	public function Delete(
+	    $student_id,
+	    $dateview
+	) {
+
+		$send_time = date('Y-m-d', strtotime($dateview));
+	    $send_chk1 = $send_time." 00:00";
+	    $send_chk2 = $send_time." 23:59";
+
+	    $auth = new JWT;
+	    $user_data = $auth->verifyToken(); 
+	    $username = $user_data['data']['user_data']->username;
+
+	    $isExists = Database::hasRows(
+	      $this->db,
+	      "SELECT *
+	      FROM SendReceiveTime
+	      WHERE student_id = ?
+	      AND send_date >= ?
+	      AND send_date <= ?",
+	      [
+	        $student_id,$send_chk1,$send_chk2
+	      ]
+	    );
+
+	    if ( $isExists === false ) {
+	      return $this->message->result(false, 'student is not send or receive!');
+	    }
+
+    	$delete = Database::query(
+	      $this->db,
+	      "DELETE FROM SendReceiveTime 
+	      WHERE student_id = ? 
+	      AND send_date >= ?
+      	  AND send_date <= ?",
+	      [
+	      	$student_id,
+	        $send_chk1,
+	        $send_chk2
+	      ]
+	    );
+
+	    if ( $delete ) {
+	      return $this->message->result(true, 'Delete successful!');
+	    } else {
+	      return $this->message->result(false, 'Delete failed!');
+	    }
+	}
+
 }

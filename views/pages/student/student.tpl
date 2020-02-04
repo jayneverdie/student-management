@@ -13,7 +13,7 @@
       <div class="btn-control">
         <button class="btn btn-primary" id="create"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create</button>
         <!-- <button class="btn btn-danger" id="delete"><i class="fa fa-close" aria-hidden="true"></i> Delete</button> -->
-        <button class="btn btn-success" id="line"><i class="fa fa-address-book"></i> Detail</button>
+        <!-- <button class="btn btn-success" id="line"><i class="fa fa-address-book"></i> Detail</button> -->
       </div>
       <!-- grid -->
       <table id="grid_student" class="table table-condensed table-striped" style="width:100%">
@@ -72,7 +72,7 @@
                     <br><br><br><br>
                     <div class="form-group col-md-4">
                         <label for="card_id">รหัสประจำตัวนักเรียน</label>
-                        <input type="number" class="form-control" name="card_id" id="card_id" autocomplete="off" required>
+                        <input type="text" min="0" maxlength="13" class="form-control" name="card_id" id="card_id" autocomplete="off" required>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="nickname">ชื่อเล่น</label>

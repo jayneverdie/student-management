@@ -317,4 +317,13 @@ class UserController
       return $response->withRedirect('/register', 301);
     }
   }
+
+  public function CountUserAll($request, $response, $args) {
+    try {
+      return $response->withJson($this->user->CountUserAll());
+    } catch (\Exception $e) {
+      return [];
+    }
+  }
+
 }

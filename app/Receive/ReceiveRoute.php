@@ -11,4 +11,5 @@ $app->group('/api/v1/receive', function () use ($app, $auth, $accessApi) {
 	$app->post('/load/minutes', 'App\Receive\ReceiveController:getMinutes')->add($auth);
 	$app->post('/send', 'App\Receive\ReceiveController:Send')->add($auth);
 	$app->post('/read', 'App\Receive\ReceiveController:Read')->add($auth);
+	$app->post('/delete', 'App\Receive\ReceiveController:Delete')->add($auth);
 });
