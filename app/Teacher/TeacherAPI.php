@@ -19,6 +19,7 @@ class TeacherAPI
         $this->db,
         "SELECT 
           P.id
+          ,ROW_NUMBER() OVER(ORDER BY P.id) AS rowid
           ,P.name_prefix_id
           ,N.name_prefix
           ,P.teacher_name
@@ -209,7 +210,7 @@ class TeacherAPI
     try {
       return Database::rows(
         $this->db,
-        "SELECT M.*,C.classroom,A.academic_year,A.academic_term
+        "SELECT ROW_NUMBER() OVER(ORDER BY M.id) AS rowid,M.*,C.classroom,A.academic_year,A.academic_term
         FROM MapTeacher M
         LEFT JOIN ClassRoom C ON M.classroom_id = C.id
         LEFT JOIN AcademicYear A ON M.academicyear_id = A.id"
@@ -292,6 +293,23 @@ class TeacherAPI
       return $this->message->result(true, 'Create successful!');
     } else {
       return $this->message->result(false, 'Create failed!');
+    }
+  }
+
+  public function mapDelete($id) {
+    $delete = Database::query(
+      $this->db,
+      "DELETE FROM MapTeacher
+      WHERE id = ?",
+      [
+        $id
+      ]
+    );
+
+    if ( $delete ) {
+      return $this->message->result(true, 'Delete successful!');
+    } else {
+      return $this->message->result(false, 'Delete failed!');
     }
   }
 

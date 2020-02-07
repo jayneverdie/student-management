@@ -19,6 +19,7 @@ class StudentAPI
         $this->db,
         "SELECT 
           P.id
+          ,ROW_NUMBER() OVER(ORDER BY P.id) AS rowid
           ,P.name_prefix_id
           ,N.name_prefix
           ,P.student_name

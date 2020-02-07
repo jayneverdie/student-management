@@ -37,7 +37,7 @@
             <th>สถานะ</th>
           </tr>
           <tr>
-            <th>id</th>
+            <th>rowid</th>
             <th>name_prefix</th>
             <th>parent_name</th>
             <th>parent_lastname</th>

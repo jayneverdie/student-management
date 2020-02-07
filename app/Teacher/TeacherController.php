@@ -168,5 +168,15 @@ class TeacherController
     }
   }
 
+  public function mapDelete($request, $response, $args) {
+    $parsedBody = $request->getParsedBody();
+
+    $result = $this->teacher->mapDelete(
+      $parsedBody['id']
+    );
+
+    return $response->withJson($result);
+  }
+
 }
 

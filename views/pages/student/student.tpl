@@ -32,7 +32,7 @@
             <th>สถานะ</th>
           </tr>
           <tr>
-            <th>id</th>
+            <th>rowid</th>
             <th>name_prefix</th>
             <th>student_name</th>
             <th>student_lastname</th>
@@ -150,11 +150,11 @@
             <div class="form-row col-md-12">
                 <div class="form-group col-md-4">
                   <label for="cardid_father">เลขบัตรประชาชนบิดา</label>
-                  <input type="text" name="cardid_father" id="cardid_father" class="form-control" autocomplete="off" required>
+                  <input type="text" name="cardid_father" id="cardid_father" class="form-control" autocomplete="off">
                 </div>
                 <div class="form-group col-md-4">
                   <label for="cardid_mother">เลขบัตรประชาชนมารดา</label>
-                  <input type="text" name="cardid_mother" id="cardid_mother" class="form-control" autocomplete="off" required>
+                  <input type="text" name="cardid_mother" id="cardid_mother" class="form-control" autocomplete="off">
                 </div>
             </div>
 
@@ -213,7 +213,7 @@
       },
       // fnDrawCallback: grid_student_callback,
       columns: [
-        { data: 'id'},
+        { data: 'rowid'},
         { data: 'name_prefix'},
         { data: 'student_name'},
         { data: 'student_lastname'},

@@ -14,4 +14,5 @@ $app->group('/api/v1/teacher', function () use ($app, $auth, $accessApi) {
 	$app->post('/student', 'App\Teacher\TeacherController:getMapStudent')->add($auth);
 	$app->post('/create/map', 'App\Teacher\TeacherController:createMap')->add($auth);
 	$app->post('/load/academicyear', 'App\Teacher\TeacherController:getAcademicyear')->add($auth);
+	$app->post('/map/delete', 'App\Teacher\TeacherController:mapDelete')->add($auth);
 });

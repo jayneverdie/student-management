@@ -31,7 +31,7 @@
             <th>สถานะ</th>
           </tr>
           <tr>
-            <th>id</th>
+            <th>rowid</th>
             <th>name_prefix</th>
             <th>teacher_name</th>
             <th>teacher_lastname</th>
@@ -63,6 +63,26 @@
         <form id="form_create" onsubmit="return submit_create()"> 
 
             <div class="form-group col-md-12">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                      <img src="/assets/images/avatar.png" id="img_card" alt="" width="150">
+                    </div>
+                    <br><br><br><br>
+                    <div class="col-md-6">
+                        <label for="card_id">เลขบัตรประจำตัวประชาชน</label>
+                        <div class="input-group">
+                        <input type="text" class="form-control" name="card_id" id="card_id" maxlength="13" autocomplete="off" required>
+                            <span class="input-group-btn">
+                            <button class="btn btn-info" id="select_card" type="button">
+                            <i class="fa fa-id-card"></i> Scan ดึงข้อมูลจากบัตร
+                            </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="form-group col-md-12">
                 <div class="form-row">
                     <div class="form-group col-md-4">
                       <img src="/assets/images/avatar.png" id="img_card" alt="" width="150">
@@ -73,7 +93,7 @@
                         <input type="text" class="form-control" name="card_id" id="card_id" required>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="form-row col-md-12">
                 <div class="form-group col-md-4">
                   <label for="name_prefix">คำนำหน้าชื่อ</label>
@@ -295,6 +315,7 @@
                       <th>ปีการศึกษา</th>
                       <th>ภาคเรียน</th>
                       <th>รายชื่อนักเรียน</th>
+                      <th>ลบ</th>
                     </tr>
                   </thead>
                 </table>    
@@ -381,7 +402,7 @@
       },
       // fnDrawCallback: grid_teacher_callback,
       columns: [
-        { data: 'id'},
+        { data: 'rowid'},
         { data: 'name_prefix'},
         { data: 'teacher_name'},
         { data: 'teacher_lastname'},
@@ -392,6 +413,60 @@
         { data: 'email'},
         { data: 'status_name'}
       ]
+    });
+
+    $('#select_card').on('click', function(){
+        
+        $('#select_card').html('<i class="fa fa-id-card"> </i> reading...');
+        $('#select_card').attr('disabled', true);
+        call_ajax('get', '/api/v1/parent/readcard', {
+        }).done(function(data) {
+            if (data.result === false) {
+                alert(data.message);
+            } else {
+                var path_img = "/files/images/teacher/"+data.cid+"/"; 
+                document.getElementById("img_card").src = path_img+data.cid+".jpg";
+                // cardid
+                $('#card_id').val(data.cid);
+                // nameprefix
+                if (data.prename=="นาย") {
+                    $('#name_prefix').val(1);
+                }else if(data.prename=="นางสาว"){
+                    $('#name_prefix').val(2);
+                }else if(data.prename=="นาง"){
+                    $('#name_prefix').val(3);
+                }
+                // fname
+                $('#teacher_name').val(data.fname);
+                // lname
+                $('#teacher_lastname').val(data.lname);
+                // sex
+                if (data.gender==1) {
+                    $('#sex_id').val('Male');
+                }else{
+                    $('#sex_id').val('Female');
+                }
+                // birthday
+                var ymd = data.dob;
+                var y = ymd.substring(0, 4);
+                var m = ymd.substring(4, 6);
+                var d = ymd.substring(6, 8);
+                $('#birthday').val(d+"-"+m+"-"+(y-543));
+                // address
+                var str_address = data.address;
+                var address = str_address.replace(/#/g, " ");
+                $('#address_first').val(address);
+            }
+            console.log(data);
+            $('#select_card').html('<i class="fa fa-id-card"></i> Scan ดึงข้อมูลจากบัตร');
+            $('#select_card').attr('disabled', false);
+        }).fail(function(data) {
+          setTimeout(function(){ 
+            alert("Please check scanner!");
+            $('#select_card').html('<i class="fa fa-id-card"></i> Scan ดึงข้อมูลจากบัตร');
+            $('#select_card').attr('disabled', false);
+          }, 3000);
+        });
     });
 
     $('#create').on('click', function () {
@@ -564,6 +639,29 @@
             // });
             
           });
+
+          $('#grid_map_classroom .--delete-map').on('click', function(){
+
+            var id = $(this).data('pk');
+            $.ajax({
+                url: '/api/v1/teacher/map/delete',
+                type : 'post',
+                cache : false,
+                dataType : 'json',
+                data : {
+                  id : id
+                }
+            })
+            .done(function(data) {
+              if ( data.result === true ) {
+                reloadGrid('#grid_map_classroom');
+              } else {
+                alert(data.message);
+              }
+            });
+            return false;
+            
+          });
         };
 
         loadGrid({
@@ -583,7 +681,7 @@
           },
           fnDrawCallback: grid_classroom_callback,
           columns: [
-            { data: 'id'},
+            { data: 'rowid'},
             { data: 'classroom'},
             { data: 'academic_year'},
             { data: 'academic_term'}
@@ -594,6 +692,11 @@
                 return '<a href="javascript:void(0)" class="--classroom" data-pk="'+row.classroom+'">'+'<i class="fa fa-search"></i>'+'</a>';
               }, targets: 4
             },
+            {
+              render: function(data, type, row) {
+                return '<a href="javascript:void(0)" class="--delete-map" data-pk="'+row.id+'">'+'<button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>'+'</a>';
+              }, targets: 5
+            }
           ]
         });
 
@@ -603,7 +706,11 @@
     });
     
     $('#submit_map').on('click', function() {
-      $.ajax({
+      if ($('#map_classroom').val()=='' || $('#map_academicyear').val()=='') {
+        alert("Please Select Data!");
+        $('#map_classroom').focus();
+      }else{
+        $.ajax({
           url: '/api/v1/teacher/create/map',
           type : 'post',
           cache : false,
@@ -613,17 +720,18 @@
             map_academicyear : $('#map_academicyear').val(),
             map_teacher_id : $('#map_teacher_id').val()
           }
-      })
-      .done(function(data) {
-        if ( data.result === true ) {
-          reloadGrid('#grid_map_classroom');
-          $('input[name=map_classroom]').val('');
-          $('input[name=map_academicyear]').val('');
-          $('input[name=map_teacher_id]').val('');
-        } else {
-          alert(data.message);
-        }
-      });
+        })
+        .done(function(data) {
+          if ( data.result === true ) {
+            reloadGrid('#grid_map_classroom');
+            $('input[name=map_classroom]').val('');
+            $('input[name=map_academicyear]').val('');
+            $('input[name=map_teacher_id]').val('');
+          } else {
+            alert(data.message);
+          }
+        });
+      }
     });
 
   });
