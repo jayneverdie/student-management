@@ -155,7 +155,8 @@
                   <textarea rows="3" name="address_third" id="address_third" class="form-control" autocomplete="off"></textarea>
                 </div>
             </div>
-            <div class="form-row">
+
+            <!-- <div class="form-row">
                 <div class="form-group col-md-4">
                   <label for="files_upload">เอกสารไฟล์</label>
                   <button type="button" class="btn btn-info" name="files_upload" id="files_upload"><i class="fa fa-file"></i> attachfile <i class="fa fa-plus-circle"></i> </button>
@@ -163,7 +164,24 @@
                 <div class="form-group col-md-8">
                   <div class="well"><span id="myfile"></span></div>
                 </div>
+            </div> -->
+
+            <div class="form-row col-md-12">
+                <div class="form-group col-md-4">
+                  <label for="image_parent">รูปประจำตัวผู้ปกครอง</label>
+                  <input type="file" name="image_parent" class="btn btn-info">
+                </div>
+                <div class="form-group col-md-3" class="text-right">
+                  <div class="text-right">
+                  <label for="files_upload">เอกสารไฟล์</label><br>
+                  <button type="button" class="btn btn-info" name="files_upload" id="files_upload"><i class="fa fa-file"></i> attachfile <i class="fa fa-plus-circle"></i> </button>
+                  </div>
+                </div>
+                <div class="form-group col-md-5">
+                  <div class="well"><span id="myfile"></span></div>
+                </div>
             </div>
+
             <div class="form-row">
               <div class="form-group col-md-12">
                 <div class="modal-footer"></div>
@@ -202,6 +220,7 @@
                   <tr>
                     <td colspan="6">
                       <img src="/assets/images/avatar.png" id="detail_card_img" alt="" width="150">
+                      <button class="btn btn-default" id="cheng_img"><i class="far fa-images"></i> เปลี่ยนรููป</button>
                     </td>
                   </tr>
                   <tr>
@@ -290,9 +309,12 @@
                     <tr>
                       <th>ลำดับ</th>
                       <th>ความสัมพันธ์</th>
-                      <th>คำนำหน้า</th>
+                      <th>รหัสนักเรียน</th>
+                      <!-- <th>คำนำหน้า</th>
                       <th>ชื่อ</th>
-                      <th>นาสกุล</th>
+                      <th>นาสกุล</th> -->
+                      <th>ชื่อ-สกุล</th>
+                      <th>ชื่อเล่น</th>
                       <th>ห้องเรียน</th>
                       <th>หมายเหตุ</th>
                       <th>ลบ</th>
@@ -314,9 +336,9 @@
                             </select>
                           </div>
                           <div class="col-md-4">
-                              <label for="map_student">นักเรียน</label>
+                              <label for="map_student_card_id">รหัสประจำตัวนักเรียน</label>
                               <div class="input-group">
-                              <input type="text" class="form-control" name="map_student" id="map_student"  readonly>
+                              <input type="text" class="form-control" name="map_student_card_id" id="map_student_card_id"  readonly>
                                 <span class="input-group-btn">
                                 <button class="btn btn-info" id="select_student" type="button">
                                 <i class="fa fa-search"></i> 
@@ -325,11 +347,12 @@
                               </div>
                           </div>
                           <div class="col-md-4">
-                              <label for="map_student_card_id">รหัสประจำตัวนักเรียน</label>
+                              <label for="map_student">นักเรียน</label>
                               <div class="input-group">
-                              <input type="text" class="form-control" name="map_student_card_id" id="map_student_card_id"  readonly>
+                              <input type="text" class="form-control" name="map_student" id="map_student"  readonly>
                               <input type="hidden" name="map_parent_id" id="map_parent_id">
                               <input type="hidden" name="map_student_id" id="map_student_id">
+                              <input type="hidden" name="parent_card_id" id="parent_card_id">
                               </div>
                           </div>
                       </div>
@@ -370,24 +393,47 @@
           <table id="grid_student" class="table table-condensed table-striped" style="width:100%">
             <thead>
               <tr>
+              <th>รหัสประจำตัวนักเรียน</th>
               <th>คำนำหน้า</th>
               <th>ชื่อ</th>
               <th>นาสกุล</th>
               <th>ชื่อเล่น</th>
-              <th>รหัสประจำตัวนักเรียน</th>
               <th>ห้องเรียน</th>
             </tr>
             <tr>
+              <th>student_id</th>
               <th>name_prefix</th>
               <th>student_name</th>
               <th>student_lastname</th>
               <th>nickname</th>
-              <th>student_id</th>
               <th>classroom</th>
             </tr>
             </thead>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal change img -->
+<div class="modal" id="modal_change_img" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <h3 class="modal-title">เปลี่ยนรูป</h3>
+      </div>
+      <div class="modal-body">
+        <!-- Content -->
+        <form id="form_change_img" onsubmit="return submit_change_img()"> 
+          <input type="file" name="img_change" id="img_change">
+          <input type="hidden" name="parent_id" id="parent_id">
+          <br>
+          <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-check" aria-hidden="true"></i> บันทึก</button>
+        </form>
       </div>
     </div>
   </div>
@@ -655,6 +701,7 @@
         $('#detail_address_second').text(rowdata[0].address_second);
         $('#detail_address_third').text(rowdata[0].address_third);
         $('#map_parent_id').val(rowdata[0].id);
+        $('#parent_card_id').val(rowdata[0].card_id);
 
         var path_img = "/files/images/parent/"+rowdata[0].card_id+"/"; 
         document.getElementById("detail_card_img").src =path_img+rowdata[0].card_id+".jpg";
@@ -732,7 +779,6 @@
           order: [],
           orderCellsTop: true,
           modeSelect: "single",
-          lengthChange: false,
           destroy: true,
           ajax: {
             url: '/api/v1/parent/map?parent_id='+rowdata[0].id,
@@ -742,9 +788,12 @@
           columns: [
             { data: 'rowid'},
             { data: 'relation_description'},
-            { data: 'name_prefix'},
-            { data: 'student_name'},
-            { data: 'student_lastname'},
+            { data: 'student_card_id'},
+            // { data: 'name_prefix'},
+            // { data: 'student_name'},
+            // { data: 'student_lastname'},
+            { data: 'fullname'},
+            { data: 'student_nickname'},
             { data: 'classroom'},
             { data: 'remark'}
           ],
@@ -780,11 +829,11 @@
               method: 'post'
             },
             columns: [
+              { data: 'student_id'},
               { data: 'name_prefix'},
               { data: 'student_name'},
               { data: 'student_lastname'},
               { data: 'student_nickname'},
-              { data: 'student_id'},
               { data: 'classroom'}
             ]
           });
@@ -837,6 +886,20 @@
         $('#sex_id').val('Female');
       }
     });
+
+    $('#card_id').keypress(function(event){
+      if(event.which != 8 && isNaN(String.fromCharCode(event.which))){
+        event.preventDefault();
+      }
+    });
+
+    $('#cheng_img').on('click',function(event){
+      $('#parent_id').val($('#parent_card_id').val());
+      $('#modal_change_img').modal({backdrop: 'static'});
+
+      event.preventDefault();
+    });
+
   });
     
 
@@ -856,7 +919,7 @@
         
 
         if(Date.parse(dn) < Date.parse(db)){
-          alert("วันเกิดไม่ถูกต้อง");
+          alert("วันเกิดไม่ถูกต้อง!");
           $('#birthday').focus();
           return false;
         }
@@ -882,6 +945,32 @@
         });
             
         return false;
+    }
+
+    function submit_change_img() {
+      var form_data = new FormData($("#form_change_img")[0]);
+      // console.log(form_data)
+      $.ajax({
+          url: '/api/v1/parent/changeimg',
+          type : 'post',
+          cache : false,
+          dataType : 'json',
+          contentType: false,
+          processData: false,
+          data : form_data
+      })
+      .done(function(data) {
+          // console.log(data);
+          var path_img = "/files/images/parent/"+data.card_id+"/"; 
+          document.getElementById("detail_card_img").src =path_img+data.card_id+".jpg";
+          // if ( data.result === true ) {
+            $('#modal_change_img').modal('hide');
+          // } else {
+          //   alert(data.message);
+          // }
+
+      });
+      return false;
     }
 
 </script>

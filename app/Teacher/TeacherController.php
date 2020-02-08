@@ -121,8 +121,8 @@ class TeacherController
   public function getMapClassroom($request, $response, $args) {
     try {
       $parsedBody = $request->getParsedBody();
-
-      $data = $this->teacher->getMapClassroom($this->datatables->filter($parsedBody));
+      $params = $request->getQueryParams();
+      $data = $this->teacher->getMapClassroom($params["teacherid"]);
       $pack = $this->datatables->get($data, $parsedBody);
 
       return $response->withJson($pack);
@@ -176,6 +176,27 @@ class TeacherController
     );
 
     return $response->withJson($result);
+  }
+
+  public function changeImg($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+      // print_r($parsedBody);
+      // echo $_FILES["img_change"]["name"];
+      // exit();
+      $rootimg = 'files/images/teacher/';
+
+      if (isset($_FILES["img_change"]["name"])) {
+        $this->tool->initFolder($rootimg, $parsedBody['teacher_id']);
+        $sur = $_FILES['img_change']['name'];
+        $typename = strrchr($sur,".");
+        move_uploaded_file($_FILES["img_change"]["tmp_name"],iconv('UTF-8','windows-874',$rootimg.$parsedBody['teacher_id'].'/'.$parsedBody['teacher_id'].$typename));
+      }
+
+      return json_encode(['result'=>true,'card_id'=>$parsedBody['teacher_id']]);
+    } catch (\Exception $e) {
+      return [];
+    }
   }
 
 }

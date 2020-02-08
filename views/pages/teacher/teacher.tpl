@@ -141,7 +141,7 @@
                 </div>
                 <div class="form-group col-md-4">
                   <label for="email">e-mail</label>
-                  <input type="email" name="email" id="email" class="form-control" autocomplete="off" required>
+                  <input type="email" name="email" id="email" class="form-control" autocomplete="off">
                 </div>
             </div>
             <div class="form-row col-md-12">
@@ -224,6 +224,7 @@
                   <tr>
                     <td colspan="6">
                       <img src="/assets/images/avatar.png" id="detail_card_img" alt="" width="150">
+                      <button class="btn btn-default" id="cheng_img"><i class="far fa-images"></i> เปลี่ยนรููป</button>
                     </td>
                   </tr>
                   <tr>
@@ -340,6 +341,7 @@
                             </select>
                           </div>
                           <input type="hidden" name="map_teacher_id" id="map_teacher_id" class="form-control" autocomplete="off">
+                           <input type="hidden" name="teacher_card_id" id="teacher_card_id" class="form-control" autocomplete="off">
                       </div>
                   </div>
                   <button type="button" id="submit_map" class="btn btn-primary">เพิ่ม</button>
@@ -378,6 +380,29 @@
             </tr>
           </thead>
         </table>    
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal change img -->
+<div class="modal" id="modal_change_img" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <h3 class="modal-title">เปลี่ยนรูป</h3>
+      </div>
+      <div class="modal-body">
+        <!-- Content -->
+        <form id="form_change_img" onsubmit="return submit_change_img()"> 
+          <input type="file" name="img_change" id="img_change">
+          <input type="hidden" name="teacher_id" id="teacher_id">
+          <br>
+          <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-check" aria-hidden="true"></i> บันทึก</button>
+        </form>
       </div>
     </div>
   </div>
@@ -555,7 +580,7 @@
       var selected = '';
       $('#file_document').html('');
       if ( rowdata.length !== 0) {
-
+        $('#card_id').val(rowdata[0].card_id);
         $('#modal_line').modal({backdrop: 'static'}); 
         $('#line_card_id').text(rowdata[0].name_prefix+rowdata[0].teacher_name+" "+rowdata[0].teacher_lastname);
         // tab detail
@@ -570,6 +595,7 @@
         $('#detail_address_second').text(rowdata[0].address_second);
         $('#detail_address_third').text(rowdata[0].address_third);
         $('#map_teacher_id').val(rowdata[0].id);
+        $('#teacher_card_id').val(rowdata[0].card_id);
 
         var path_img = "/files/images/teacher/"+rowdata[0].card_id+"/"; 
         document.getElementById("detail_card_img").src =path_img+rowdata[0].card_id+".jpg";
@@ -664,6 +690,8 @@
           });
         };
 
+        var teacherid = $('#map_teacher_id').val();
+
         loadGrid({
           el: '#grid_map_classroom',
           processing: true,
@@ -676,7 +704,7 @@
           lengthChange: false,
           destroy: true,
           ajax: {
-            url: '/api/v1/teacher/map',
+            url: '/api/v1/teacher/map?teacherid='+teacherid,
             method: 'post'
           },
           fnDrawCallback: grid_classroom_callback,
@@ -734,6 +762,27 @@
       }
     });
 
+    $('#card_id').keypress(function(event){
+      if(event.which != 8 && isNaN(String.fromCharCode(event.which))){
+        event.preventDefault();
+      }
+    });
+
+    $('#cheng_img').on('click',function(event){
+      $('#teacher_id').val($('#teacher_card_id').val());
+      $('#modal_change_img').modal({backdrop: 'static'});
+
+      event.preventDefault();
+    });
+
+    $('#name_prefix').on('change',function(){
+      if ($('#name_prefix').val()==1 || $('#name_prefix').val()==4) {
+        $('#sex_id').val('Male');
+      }else{
+        $('#sex_id').val('Female');
+      }
+    });
+    
   });
     
 
@@ -743,8 +792,55 @@
         $(divbr).remove(); 
     }
 
+    function submit_change_img() {
+      var form_data = new FormData($("#form_change_img")[0]);
+      // console.log(form_data)
+      $.ajax({
+          url: '/api/v1/teacher/changeimg',
+          type : 'post',
+          cache : false,
+          dataType : 'json',
+          contentType: false,
+          processData: false,
+          data : form_data
+      })
+      .done(function(data) {
+          // console.log(data);
+          var path_img = "/files/images/teacher/"+data.card_id+"/"; 
+          document.getElementById("detail_card_img").src =path_img+data.card_id+".jpg";
+          // if ( data.result === true ) {
+            $('#modal_change_img').modal('hide');
+          // } else {
+          //   alert(data.message);
+          // }
+
+      });
+      return false;
+    }
+
     function submit_create() {
         var form_data = new FormData($("#form_create")[0]);
+        // var card_id = $('#card_id').val();
+        
+        // if(typeof card_id != 'number'){
+        //   alert("เลขบัตรประจำตัวประชาชน ไม่ถูกต้อง!");
+        //   $('#card_id').val('');
+        //   $('#card_id').focus();
+        //   return false;
+        // }
+
+        var today = new Date();
+        var dn = dayjs(today).format('YYYY-MM-DD');
+
+        var db1 = $('#birthday').val().split("-");
+        var db = db1[2]+'-'+db1[1]+'-'+db1[0];  
+        
+
+        if(Date.parse(dn) < Date.parse(db)){
+          alert("วันเกิดไม่ถูกต้อง!");
+          $('#birthday').focus();
+          return false;
+        }
 
         $.ajax({
             url: '/api/v1/teacher/create',

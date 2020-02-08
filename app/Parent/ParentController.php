@@ -82,6 +82,7 @@ class ParentController
     try {
       $parsedBody = $request->getParsedBody();
       $root = 'files/document/parent/';
+      $rootimg = 'files/images/parent/';
       
       if (isset($_FILES["files_upload"]["name"])) {
         $this->tool->initFolder($root, $parsedBody['card_id']);
@@ -95,6 +96,13 @@ class ParentController
             $newfilename,'parent',$parsedBody['card_id']
           );
         }
+      }
+
+      if (isset($_FILES["image_parent"]["name"])) {
+        $this->tool->initFolder($rootimg, $parsedBody['card_id']);
+        $sur = $_FILES['image_parent']['name'];
+        $typename = strrchr($sur,".");
+        move_uploaded_file($_FILES["image_parent"]["tmp_name"],iconv('UTF-8','windows-874',$rootimg.$parsedBody['card_id'].'/'.$parsedBody['card_id'].$typename));
       }
 
       $result = $this->parent->create(
@@ -195,6 +203,27 @@ class ParentController
     );
 
     return $response->withJson($result);
+  }
+
+  public function changeImg($request, $response, $args) {
+    try {
+      $parsedBody = $request->getParsedBody();
+      // print_r($parsedBody);
+      // echo $_FILES["img_change"]["name"];
+      // exit();
+      $rootimg = 'files/images/parent/';
+
+      if (isset($_FILES["img_change"]["name"])) {
+        $this->tool->initFolder($rootimg, $parsedBody['parent_id']);
+        $sur = $_FILES['img_change']['name'];
+        $typename = strrchr($sur,".");
+        move_uploaded_file($_FILES["img_change"]["tmp_name"],iconv('UTF-8','windows-874',$rootimg.$parsedBody['parent_id'].'/'.$parsedBody['parent_id'].$typename));
+      }
+
+      return json_encode(['result'=>true,'card_id'=>$parsedBody['parent_id']]);
+    } catch (\Exception $e) {
+      return [];
+    }
   }
 
 }

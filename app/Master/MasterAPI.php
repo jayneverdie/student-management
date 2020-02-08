@@ -34,6 +34,20 @@ class MasterAPI
     $user_data = $auth->verifyToken(); 
     $username = $user_data['data']['user_data']->username;
 
+    $isExists = Database::hasRows(
+      $this->db,
+      "SELECT $name 
+      FROM $table
+      WHERE $name = ?",
+      [
+        trim($value)
+      ]
+    );
+
+    if ( $isExists === true ) {
+      return $this->message->result(false, 'This name already exists!');
+    }
+
     $update = Database::query(
       $this->db,
       "UPDATE $table
@@ -421,6 +435,7 @@ class MasterAPI
       $this->db,
       "SELECT 
         N.id
+        ,ROW_NUMBER() OVER(ORDER BY N.id) AS rowid
         ,N.classroom
         ,N.create_date
         ,N.create_by

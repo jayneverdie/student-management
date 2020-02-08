@@ -17,4 +17,5 @@ $app->group('/api/v1/parent', function () use ($app, $auth, $accessApi) {
 	$app->post('/create/map', 'App\Parent\ParentController:createMap')->add($auth);
 	$app->post('/relation/update', 'App\Parent\ParentController:mapUpdate')->add($auth);
 	$app->post('/map/delete', 'App\Parent\ParentController:mapDelete')->add($auth);
+	$app->post('/changeimg', 'App\Parent\ParentController:changeImg')->add($auth);
 });

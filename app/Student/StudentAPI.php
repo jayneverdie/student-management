@@ -58,56 +58,107 @@ class StudentAPI
     try {
       if ($form_type === "send") {
         $columndate = 'send_date'; 
+
+        return Database::rows(
+          $this->db,
+          "SELECT 
+            P.id
+            ,R.relation_description
+            ,N.name_prefix+P.student_name+' '+P.student_lastname AS FullName
+            ,P.name_prefix_id
+            ,N.name_prefix
+            ,P.student_name
+            ,P.student_lastname
+            ,P.student_id
+            ,P.student_nickname
+            ,P.sex_id
+            ,S.sex_description
+            ,P.card_id
+            ,P.address_first
+            ,P.address_second
+            ,P.phone
+            ,P.birthday
+            ,P.attendance_date
+            ,P.classroom_id
+            ,C.classroom
+            ,P.status
+            ,WB.status_name
+            ,P.create_date
+            ,P.create_by
+            ,P.update_date
+            ,P.update_by
+            ,MP.parent_id
+            ,PT.card_id
+          FROM StudentTrans P
+          LEFT JOIN NamePrefix N ON P.name_prefix_id = N.id
+          LEFT JOIN Sex S ON P.sex_id = S.sex_id 
+          LEFT JOIN ClassRoom C ON P.classroom_id = C.id
+          LEFT JOIN web_status WB ON P.status = WB.id
+          LEFT JOIN MapParentStudent MP ON P.id = MP.student_id
+          LEFT JOIN Relation R ON MP.relation = R.id
+          LEFT JOIN ParentTrans PT ON MP.parent_id = PT.id 
+          WHERE PT.card_id = ?
+          AND P.id NOT IN
+          (
+            SELECT student_id
+            FROM SendReceiveTime 
+            WHERE convert(varchar, $columndate, 23) = ?
+          )",[$id,$date]
+        ); 
+
       }else{
         $columndate = 'receive_date'; 
-      }
 
-      return Database::rows(
-        $this->db,
-        "SELECT 
-          P.id
-          ,R.relation_description
-          ,N.name_prefix+P.student_name+' '+P.student_lastname AS FullName
-          ,P.name_prefix_id
-          ,N.name_prefix
-          ,P.student_name
-          ,P.student_lastname
-          ,P.student_id
-          ,P.student_nickname
-          ,P.sex_id
-          ,S.sex_description
-          ,P.card_id
-          ,P.address_first
-          ,P.address_second
-          ,P.phone
-          ,P.birthday
-          ,P.attendance_date
-          ,P.classroom_id
-          ,C.classroom
-          ,P.status
-          ,WB.status_name
-          ,P.create_date
-          ,P.create_by
-          ,P.update_date
-          ,P.update_by
-          ,MP.parent_id
-          ,PT.card_id
-        FROM StudentTrans P
-        LEFT JOIN NamePrefix N ON P.name_prefix_id = N.id
-        LEFT JOIN Sex S ON P.sex_id = S.sex_id 
-        LEFT JOIN ClassRoom C ON P.classroom_id = C.id
-        LEFT JOIN web_status WB ON P.status = WB.id
-        LEFT JOIN MapParentStudent MP ON P.id = MP.student_id
-        LEFT JOIN Relation R ON MP.relation = R.id
-        LEFT JOIN ParentTrans PT ON MP.parent_id = PT.id 
-        WHERE PT.card_id = ?
-        AND P.id NOT IN
-        (
-          SELECT student_id
-          FROM SendReceiveTime 
-          WHERE convert(varchar, $columndate, 23) = ?
-        )",[$id,$date]
-      ); 
+        return Database::rows(
+          $this->db,
+          "SELECT 
+            P.id
+            ,R.relation_description
+            ,N.name_prefix+P.student_name+' '+P.student_lastname AS FullName
+            ,P.name_prefix_id
+            ,N.name_prefix
+            ,P.student_name
+            ,P.student_lastname
+            ,P.student_id
+            ,P.student_nickname
+            ,P.sex_id
+            ,S.sex_description
+            ,P.card_id
+            ,P.address_first
+            ,P.address_second
+            ,P.phone
+            ,P.birthday
+            ,P.attendance_date
+            ,P.classroom_id
+            ,C.classroom
+            ,P.status
+            ,WB.status_name
+            ,P.create_date
+            ,P.create_by
+            ,P.update_date
+            ,P.update_by
+            ,MP.parent_id
+            ,PT.card_id
+          FROM StudentTrans P
+          LEFT JOIN NamePrefix N ON P.name_prefix_id = N.id
+          LEFT JOIN Sex S ON P.sex_id = S.sex_id 
+          LEFT JOIN ClassRoom C ON P.classroom_id = C.id
+          LEFT JOIN web_status WB ON P.status = WB.id
+          LEFT JOIN MapParentStudent MP ON P.id = MP.student_id
+          LEFT JOIN Relation R ON MP.relation = R.id
+          LEFT JOIN ParentTrans PT ON MP.parent_id = PT.id 
+          LEFT JOIN SendReceiveTime SR ON convert(varchar, SR.send_date, 23) IS NOT NULL 
+          AND SR.student_id = P.id
+          WHERE PT.card_id = ?
+          AND convert(varchar, SR.send_date, 23) = '$date'
+          AND P.id NOT IN
+          (
+            SELECT student_id
+            FROM SendReceiveTime 
+            WHERE convert(varchar, $columndate, 23) = ?
+          )",[$id,$date]
+        );
+      }
     } catch (Exception $e) {
       throw new Exception($e->getMessage());
     }

@@ -126,16 +126,17 @@
 
           <div class="form-row col-md-12">
             <div class="form-row">
-              <div class="form-group col-md-3">
+              <!-- <div class="form-group col-md-3">
                 <label>สถานะความสัมพันธ์</label>
                 <h3><p id="Prelation"></p></h3>
-              </div>
+              </div> -->
               <div class="form-group col-md-3">
                 <img src="/assets/images/avatar.png" id="Pimg_card" alt="" width="150">
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
+
+            <!-- <div class="form-row">
+              <div class="form-group col-md-3">
                 <label for="Pfull_name">ชื่อ-สกุล</label>
                 <input type="text" name="Pfull_name" id="Pfull_name" class="form-control"
                 readonly>
@@ -144,7 +145,18 @@
                 <label for="Pphone">เบอร์โทรศัพท์</label>
                 <input type="text" name="Pphone" id="Pphone" class="form-control" readonly>
               </div>
+            </div> -->
+
+            <div class="form-group col-md-3">
+              <label for="Pfull_name">ชื่อ-สกุล</label>
+              <input type="text" name="Pfull_name" id="Pfull_name" class="form-control"
+                readonly>
             </div>
+            <div class="form-group col-md-3">
+              <label for="Pphone">เบอร์โทรศัพท์</label>
+              <input type="text" name="Pphone" id="Pphone" class="form-control" readonly>
+            </div>
+
           </div>
 
           <div class="form-row col-md-12">
@@ -164,9 +176,9 @@
                   <th>เลือก</th>
                   <th>รูปประจำตัว</th>
                   <th>สถานะความสัมพันธ์</th>
+                  <th>รหัสประจำตัวนักเรียน</th>
                   <th>ชื่อ-นามสกุล</th>
                   <th>ชื่อเล่น</th>
-                  <th>รหัสประจำตัวนักเรียน</th>
                   <th>ห้องเรียน</th>
                 </tr>
               </thead>
@@ -381,9 +393,9 @@
           { data: 'id'},
           { data: 'student_id'},
           { data: 'relation_description'},
+          { data: 'student_id'},
           { data: 'FullName'},
           { data: 'student_nickname'},
-          { data: 'student_id'},
           { data: 'classroom'}
         ],
         columnDefs: [
@@ -478,9 +490,9 @@
           { data: 'id'},
           { data: 'student_id'},
           { data: 'relation_description'},
+          { data: 'student_id'},
           { data: 'FullName'},
           { data: 'student_nickname'},
-          { data: 'student_id'},
           { data: 'classroom'}
         ],
         columnDefs: [
@@ -633,9 +645,9 @@
             { data: 'id'},
             { data: 'student_id'},
             { data: 'relation_description'},
+            { data: 'student_id'},
             { data: 'FullName' ,width:'25%'},
             { data: 'student_nickname'},
-            { data: 'student_id'},
             { data: 'classroom'}
           ],
           columnDefs: [

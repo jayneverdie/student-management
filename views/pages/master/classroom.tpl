@@ -15,15 +15,15 @@
       <table id="grid_classroom" class="table table-condensed table-striped" style="width:100%">
         <thead>
           <tr>
-            <th>Id</th>
-            <th>สถานะความสัมพันธ์</th>
+            <th>ลำดับ</th>
+            <th>ห้องเรียน</th>
             <th>ผู้สร้าง</th>
             <th>วัน/เวลาสร้าง</th>
             <th>ผู้แก้ไข</th>
             <th>วัน/เวลาแก้ไข</th>
           </tr>
           <tr>
-            <th>id</th>
+            <th>rowid</th>
             <th>classroom</th>
             <th>create_by</th>
             <th>create_date</th>
@@ -96,7 +96,7 @@
       },
       fnDrawCallback: grid_classroom_callback,
       columns: [
-        { data: "id"},
+        { data: "rowid"},
         { data: "classroom"},
         { data: 'create_by'},
         { data: "create_date"},

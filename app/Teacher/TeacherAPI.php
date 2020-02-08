@@ -206,14 +206,15 @@ class TeacherAPI
     }
   }
 
-  public function getMapClassroom() {
+  public function getMapClassroom($teacherid) {
     try {
       return Database::rows(
         $this->db,
         "SELECT ROW_NUMBER() OVER(ORDER BY M.id) AS rowid,M.*,C.classroom,A.academic_year,A.academic_term
         FROM MapTeacher M
         LEFT JOIN ClassRoom C ON M.classroom_id = C.id
-        LEFT JOIN AcademicYear A ON M.academicyear_id = A.id"
+        LEFT JOIN AcademicYear A ON M.academicyear_id = A.id
+        WHERE M.teacher_id=?",[$teacherid]
       );
     } catch (\Exception $e) {
       throw new Exception($e->getMessage());

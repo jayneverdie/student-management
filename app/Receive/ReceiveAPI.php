@@ -32,7 +32,7 @@ class ReceiveAPI
 			FROM SendReceiveTime XR
 			LEFT JOIN ParentTrans XPR ON XR.send_id = XPR.id
 			WHERE XR.send_date >='$dateview_start' AND XR.send_date <= '$dateview_end' AND XR.student_id=S.id) AS parent_fullname_send
-			,(SELECT CONVERT(varchar,receive_date,103) +' '+ SUBSTRING(CONVERT(varchar,send_date,108),1,5) FROM SendReceiveTime WHERE receive_date >='$dateview_start' AND receive_date <= '$dateview_end' AND student_id=S.id) AS receive_date
+			,(SELECT CONVERT(varchar,receive_date,103) +' '+ SUBSTRING(CONVERT(varchar,receive_date,108),1,5) FROM SendReceiveTime WHERE receive_date >='$dateview_start' AND receive_date <= '$dateview_end' AND student_id=S.id) AS receive_date
 			,(SELECT XPR.parent_name+' '+XPR.parent_lastname
 			FROM SendReceiveTime XR
 			LEFT JOIN ParentTrans XPR ON XR.receive_id = XPR.id
@@ -230,6 +230,7 @@ class ReceiveAPI
 		    if ( $isExists === true ) {
 		      return $this->message->result(false, 'This id already exists!');
 		    }
+
 		}
 
 		for ($i=0; $i < count($send_student_id); $i++) { 

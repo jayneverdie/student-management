@@ -20,11 +20,11 @@
         <thead>
           <tr>
             <th>ลำดับ</th>
+            <th>รหัสประจำตัวนักเรียน</th>
             <th>คำนำหน้า</th>
             <th>ชื่อ</th>
             <th>นาสกุล</th>
             <th>ชื่อเล่น</th>
-            <th>รหัสประจำตัวนักเรียน</th>
             <th>ห้องเรียน</th>
             <th>เบอร์โทร</th>
             <th>วันเกิด</th>
@@ -33,11 +33,11 @@
           </tr>
           <tr>
             <th>rowid</th>
+            <th>student_id</th>
             <th>name_prefix</th>
             <th>student_name</th>
             <th>student_lastname</th>
             <th>nickname</th>
-            <th>student_id</th>
             <th>classroom</th>
             <th>phone</th>
             <th>birthday</th>
@@ -147,7 +147,7 @@
               </div>
             </div>
 
-            <div class="form-row col-md-12">
+           <!--  <div class="form-row col-md-12">
                 <div class="form-group col-md-4">
                   <label for="cardid_father">เลขบัตรประชาชนบิดา</label>
                   <input type="text" name="cardid_father" id="cardid_father" class="form-control" autocomplete="off">
@@ -156,7 +156,7 @@
                   <label for="cardid_mother">เลขบัตรประชาชนมารดา</label>
                   <input type="text" name="cardid_mother" id="cardid_mother" class="form-control" autocomplete="off">
                 </div>
-            </div>
+            </div> -->
 
             <div class="form-row">
               <div class="form-group col-md-12">
@@ -214,11 +214,11 @@
       // fnDrawCallback: grid_student_callback,
       columns: [
         { data: 'rowid'},
+        { data: 'student_id'},
         { data: 'name_prefix'},
         { data: 'student_name'},
         { data: 'student_lastname'},
         { data: 'student_nickname'},
-        { data: 'student_id'},
         { data: 'classroom'},
         { data: 'phone'},
         { data: 'birthday'},
@@ -307,6 +307,20 @@
         });
     });
 
+    $('#card_id').keypress(function(event){
+      if(event.which != 8 && isNaN(String.fromCharCode(event.which))){
+        event.preventDefault();
+      }
+    });
+
+    $('#name_prefix').on('change',function(){
+      if ($('#name_prefix').val()==1 || $('#name_prefix').val()==4) {
+        $('#sex_id').val('Male');
+      }else{
+        $('#sex_id').val('Female');
+      }
+    });
+
   });
     
 
@@ -318,6 +332,27 @@
 
     function submit_create() {
         var form_data = new FormData($("#form_create")[0]);
+
+        var today = new Date();
+        var dn = dayjs(today).format('YYYY-MM-DD');
+
+        var db1 = $('#birthday').val().split("-");
+        var db = db1[2]+'-'+db1[1]+'-'+db1[0];  
+        
+        var da1 = $('#attendance').val().split("-");
+        var da = da1[2]+'-'+da1[1]+'-'+da1[0];  
+
+        if(Date.parse(dn) < Date.parse(db)){
+          alert("วันเกิดไม่ถูกต้อง!");
+          $('#birthday').focus();
+          return false;
+        }
+
+        if(Date.parse(db) > Date.parse(da)){
+          alert("วันที่เข้าเรียนไม่ถูกต้อง!");
+          $('#attendance').focus();
+          return false;
+        }
 
         $.ajax({
             url: '/api/v1/student/create',
